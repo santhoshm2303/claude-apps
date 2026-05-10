@@ -5,150 +5,76 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WA Open Pit Mine — Approval Pathway Tracker</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eeecea;--text:#1a1a18;--text2:#5f5e5a;--text3:#9b9990;--border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);--radius:8px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;--text:#f0ede8;--text2:#a8a69f;--text3:#6b6963;--border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18)}}
-body{font-family:var(--font);background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh}
-.app{max-width:1200px;margin:0 auto;padding:24px 16px 48px}
-header{margin-bottom:20px}
-header h1{font-size:20px;font-weight:600}
-header p{font-size:13px;color:var(--text2);margin-top:4px}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border2);margin-bottom:20px}
-.tab{padding:8px 16px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--text);border-bottom-color:#1D9E75}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
-.stat{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 14px}
-.stat-val{font-size:22px;font-weight:600}
-.stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
-.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-.btn{font-size:12px;padding:5px 11px;border:0.5px solid var(--border2);border-radius:6px;background:var(--bg);color:var(--text2);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-.btn:hover{background:var(--bg2);color:var(--text)}
-.btn.active{background:var(--bg2);color:var(--text);outline:1.5px solid #1D9E75;outline-offset:1px}
-.sep{width:1px;height:20px;background:var(--border)}
-.hint{font-size:11px;color:var(--text3);margin-left:auto}
-.stage{margin-bottom:4px}
-.stage-node{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;cursor:pointer;user-select:none;border:0.5px solid transparent}
-.stage-node:hover{filter:brightness(0.97)}
-.stage-chevron{font-size:13px;transition:transform .2s;flex-shrink:0}
-.stage-chevron.open{transform:rotate(90deg)}
-.stage-label{font-size:13px;font-weight:500;flex:1}
-.stage-badge{font-size:10px;padding:2px 7px;border-radius:10px;flex-shrink:0;font-weight:500}
-.children{display:none;position:relative;margin-top:2px}
-.children.open{display:block}
-.item-row{display:flex;align-items:flex-start;border-radius:6px;overflow:hidden;border:0.5px solid var(--border);background:var(--bg)}
-.item-check-col{padding:10px;cursor:pointer;flex-shrink:0;display:flex;align-items:center}
-.item-check-col:hover{background:var(--bg2)}
-.chk{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.chk.done{background:#1D9E75;border-color:#1D9E75}
-.chk.done::after{content:'';display:block;width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(0,-1px)}
-.item-body{flex:1;padding:8px 8px 8px 0;cursor:pointer;min-width:0}
-.item-body:hover{background:var(--bg2)}
-.item-title{font-size:12px;font-weight:500;color:var(--text);line-height:1.3}
-.item-title.done{text-decoration:line-through;color:var(--text2)}
-.item-sub{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4}
-.item-right{display:flex;align-items:center;gap:4px;padding:8px 8px 8px 0;flex-shrink:0}
-.agency-pill{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:500;white-space:nowrap}
-.note-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;line-height:1;padding:2px 4px}
-.note-btn:hover{color:var(--text2)}
-.note-btn.has-note{color:#1D9E75}
-.note-panel{display:none;padding:6px 12px 8px;background:var(--bg2);border-top:0.5px solid var(--border)}
-.note-panel.open{display:block}
-.note-panel textarea,.stage-note textarea{width:100%;font-size:11px;font-family:var(--font);color:var(--text);background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:5px 7px;resize:vertical;min-height:44px;line-height:1.5}
-.stage-note{padding:6px 12px 8px 36px;display:none;border-top:0.5px solid var(--border)}
-.stage-note.open{display:block}
-.prog-bar{flex:1;min-width:100px;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;background:#1D9E75;border-radius:3px;transition:width .3s}
-.prog-lbl{font-size:11px;color:var(--text2);white-space:nowrap}
-.gantt-outer{overflow-x:auto;border:0.5px solid var(--border2);border-radius:10px;position:relative;background:var(--bg)}
-table{border-collapse:collapse;width:100%;min-width:700px}
-thead tr{border-bottom:1px solid var(--border2)}
-.th-lbl{width:220px;min-width:220px;padding:6px 10px;font-size:10px;font-weight:600;color:var(--text2);text-align:left;background:var(--bg2);position:sticky;left:0;z-index:3}
-.th-mo{padding:5px 2px;font-size:10px;font-weight:500;color:var(--text2);text-align:center;background:var(--bg2);border-left:0.5px solid var(--border)}
-.lbl-cell{padding:4px 8px 4px 12px;font-size:11px;color:var(--text);position:sticky;left:0;z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;background:var(--bg);cursor:pointer;border-bottom:0.5px solid var(--border)}
-.lbl-cell:hover{background:var(--bg2)}
-.lbl-cell.stage-lbl{font-weight:500;background:var(--bg2)}
-.bar-td{padding:2px 0;position:relative;border-left:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
-.stage-bar-td{background:var(--bg2);border-bottom:0.5px solid var(--border2)}
-.bar{position:absolute;top:3px;height:16px;border-radius:3px;cursor:ew-resize;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:500;overflow:hidden;white-space:nowrap;user-select:none}
-.bar:hover{filter:brightness(0.88)}
-.bar.critical{outline:2px solid #E24B4A;outline-offset:1px}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:11px;color:var(--text2);align-items:center}
-.leg-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.tooltip{position:fixed;background:var(--bg);border:0.5px solid var(--border2);border-radius:8px;padding:8px 11px;font-size:11px;color:var(--text);pointer-events:none;z-index:999;display:none;line-height:1.7;max-width:240px}
-</style>
-</head>
-<body>
-<div class="app">
-  <header>
-    <h1>WA Open Pit Mine — Approval Pathway Tracker</h1>
-    <p>Interactive approval checklist, hierarchy view and Gantt chart with dependency logic</p>
-  </header>
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('hierarchy',this)">Hierarchy</button>
-    <button class="tab" onclick="switchTab('gantt',this)">Gantt Chart</button>
-    <button class="tab" onclick="switchTab('checklist',this)">Checklist</button>
-  </div>
-  <div id="tab-hierarchy" class="tab-panel active">
-    <div class="toolbar">
-      <button class="btn" onclick="expandAll()">Expand all</button>
-      <button class="btn" onclick="collapseAll()">Collapse all</button>
-      <div class="sep"></div>
-      <div class="prog-bar"><div class="prog-fill" id="pf-h"></div></div>
-      <span class="prog-lbl" id="pl-h">0 / 0</span>
-      <div class="sep"></div>
-      <button class="btn" onclick="exportNotes()">Export notes</button>
-    </div>
-    <div id="tree"></div>
-  </div>
-  <div id="tab-gantt" class="tab-panel">
-    <div class="stats" id="gantt-stats"></div>
-    <div class="toolbar">
-      <button class="btn" id="btn-cp" onclick="toggleCP()">Critical path</button>
-      <button class="btn" id="btn-dep" onclick="toggleDep()">Dep. arrows</button>
-      <div class="sep"></div>
-      <button class="btn" onclick="resetGantt()">Reset</button>
-      <button class="btn" onclick="exportCSV()">Export CSV</button>
-      <span class="hint">Drag bars to adjust</span>
-    </div>
-    <div class="gantt-outer" id="gantt-outer"><div id="gantt"></div></div>
-    <div class="legend" id="gantt-legend"></div>
-  </div>
-  <div id="tab-checklist" class="tab-panel">
-    <div class="toolbar">
-      <button class="btn" onclick="expandAll()">Expand all</button>
-      <button class="btn" onclick="collapseAll()">Collapse all</button>
-      <div class="sep"></div>
-      <div class="prog-bar"><div class="prog-fill" id="pf-c"></div></div>
-      <span class="prog-lbl" id="pl-c">0 / 0</span>
-      <div class="sep"></div>
-      <button class="btn" onclick="exportNotes()">Export</button>
-    </div>
-    <div id="checklist"></div>
-  </div>
-</div>
-<div class="tooltip" id="tt"></div>
-<script>
-const STAGES=[{id:'s1',label:'1. Tenement conversion',color:'#1D9E75',bg:'#E1F5EE',tx:'#085041',bdg:'#9FE1CB',items:[{id:'a1',title:'Mining Lease application (s.74)',sub:'Convert EL/ELA to ML - Mining Act 1978',ag:'DEMIRS',agBg:'#9FE1CB',agTx:'#085041',dur:6,deps:[]},{id:'a2',title:'Mining Proposal (MP)',sub:'Required before ML grant - submitted to DEMIRS',ag:'DEMIRS',agBg:'#9FE1CB',agTx:'#085041',dur:5,deps:['a1']}]},{id:'s2',label:'2. Environmental approvals',color:'#7F77DD',bg:'#EEEDFE',tx:'#3C3489',bdg:'#CECBF6',items:[{id:'b1',title:'Part IV EPA referral',sub:'EIA referral - EP Act 1986',ag:'EPA/DWER',agBg:'#CECBF6',agTx:'#3C3489',dur:2,deps:['a1']},{id:'b2',title:'Level of assessment determined',sub:'PI / PER / API / Scoping document',ag:'EPA',agBg:'#CECBF6',agTx:'#3C3489',dur:3,deps:['b1']},{id:'b3',title:'EIA / public review',sub:'PER public comment + EPA assessment',ag:'EPA',agBg:'#CECBF6',agTx:'#3C3489',dur:12,deps:['b2']},{id:'b4',title:'Ministerial Statement issued',sub:'Binding environmental conditions',ag:'Min. Env.',agBg:'#CECBF6',agTx:'#3C3489',dur:3,deps:['b3']},{id:'b5',title:'s.5C EP Act conditions compliance',sub:'Conditions compliance program established',ag:'DWER',agBg:'#CECBF6',agTx:'#3C3489',dur:2,deps:['b4']}]},{id:'s3',label:'3. Native title and heritage',color:'#378ADD',bg:'#E6F1FB',tx:'#0C447C',bdg:'#B5D4F4',items:[{id:'c1',title:'Right to Negotiate (RTN)',sub:'6-month statutory negotiation - NTA 1993',ag:'NNTT',agBg:'#B5D4F4',agTx:'#0C447C',dur:6,deps:['a1']},{id:'c2',title:'ILUA / CLA executed',sub:'Negotiated agreement with native title holders',ag:'NTRBs',agBg:'#B5D4F4',agTx:'#0C447C',dur:10,deps:['c1']},{id:'c3',title:'Aboriginal Heritage Survey',sub:'Desktop + field survey - ethnographic/archaeological',ag:'DPLH/AAHC',agBg:'#B5D4F4',agTx:'#0C447C',dur:8,deps:['a1']},{id:'c4',title:'s.18 AH Minister consent',sub:'Ministerial consent - use of AH sites',ag:'DPLH',agBg:'#B5D4F4',agTx:'#0C447C',dur:6,deps:['c3']}]},{id:'s4',label:'4. Mining Act approvals',color:'#BA7517',bg:'#FAEEDA',tx:'#633806',bdg:'#FAC775',items:[{id:'d1',title:'MDCP prepared and submitted',sub:'Mine Disturbance and Closure Plan',ag:'DEMIRS',agBg:'#FAC775',agTx:'#633806',dur:5,deps:['a1']},{id:'d2',title:'Mining Lease (ML) granted',sub:'Requires MP, Min. Statement, s.18, ILUA, MDCP',ag:'Min. Mines',agBg:'#FAC775',agTx:'#633806',dur:3,deps:['a2','b4','c2','c4','d1']},{id:'d3',title:'Programme of Work (PoW) approved',sub:'Submitted per disturbance area / stage',ag:'DEMIRS',agBg:'#FAC775',agTx:'#633806',dur:3,deps:['d2']},{id:'d4',title:'Blast / noise / dust approvals',sub:'Blasting (Mines Safety) - EP Act noise assessment',ag:'DEMIRS',agBg:'#FAC775',agTx:'#633806',dur:3,deps:['d2']}]},{id:'s5',label:'5. Water and land use',color:'#D85A30',bg:'#FAECE7',tx:'#4A1B0C',bdg:'#F5C4B3',items:[{id:'e1',title:'Water licence - s.5C RiWI Act',sub:'Groundwater abstraction / dewatering licence',ag:'DWER',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:14,deps:['b4']},{id:'e2',title:'Bed and Banks permit - s.17 RiWI Act',sub:'Work in/near watercourses or wetlands',ag:'DWER',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:5,deps:['b4']},{id:'e3',title:'Clearing permit - Part V EP Act',sub:'Vegetation clearing 0.5 ha or threatened species',ag:'DWER',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:7,deps:['b4']},{id:'e4',title:'Planning approval (if applicable)',sub:'WAPC / local government - Planning Act 2005',ag:'WAPC/LGA',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:6,deps:['a1']}]},{id:'s6',label:'6. Access to ground',color:'#3B6D11',bg:'#EAF3DE',tx:'#173404',bdg:'#C0DD97',items:[{id:'f1',title:'Works Approval - Part V EP Act',sub:'Prescribed premises approval',ag:'DWER',agBg:'#C0DD97',agTx:'#173404',dur:4,deps:['b5','d2']},{id:'f2',title:'Miscellaneous Licence',sub:'Mining Act - access roads, camps, infrastructure',ag:'DEMIRS',agBg:'#C0DD97',agTx:'#173404',dur:3,deps:['d2']},{id:'f3',title:'Access to ground authorised',sub:'All approvals in place - PoW approved - ILUA executed',ag:'All',agBg:'#C0DD97',agTx:'#173404',dur:1,deps:['d3','d4','e1','e2','e3','f1','f2']}]},{id:'s7',label:'7. Commence operations',color:'#5F5E5A',bg:'#F1EFE8',tx:'#2C2C2A',bdg:'#D3D1C7',items:[{id:'g1',title:'Safety Management System (SMS/HSMS)',sub:'Notified to inspector - Mines Safety and Inspection Act 1994',ag:'DEMIRS',agBg:'#D3D1C7',agTx:'#2C2C2A',dur:3,deps:['d2']},{id:'g2',title:'Federal EPBC Act referral (if triggered)',sub:'Commonwealth - matters of national environmental significance',ag:'DCCEEW',agBg:'#D3D1C7',agTx:'#2C2C2A',dur:18,deps:['a1']},{id:'g3',title:'Mine operations commence',sub:'Ongoing reporting, monitoring and compliance obligations',ag:'Multi',agBg:'#D3D1C7',agTx:'#2C2C2A',dur:1,deps:['f3','g1']}]}];
-const ALL_ITEMS=STAGES.flatMap(s=>s.items);
-const S={};
-STAGES.forEach(s=>{S[s.id]={open:true,note:'',noteOpen:false};s.items.forEach(it=>{S[it.id]={done:false,noteOpen:false,note:''};});});
-const lags={};
-let showCP=false,showDep=false;
-function switchTab(id,el){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');el.classList.add('active');if(id==='gantt')renderGantt();else if(id==='checklist')renderChecklist();else renderHierarchy();}
-function renderHierarchy(){const tree=document.getElementById('tree');tree.innerHTML='';let total=0,done=0;STAGES.forEach((s)=>{total+=s.items.length;const itemsDone=s.items.filter(it=>S[it.id].done).length;done+=itemsDone;const sOpen=S[s.id].open;const div=document.createElement('div');div.className='stage';const sNode=document.createElement('div');sNode.className='stage-node';sNode.style.cssText='background:'+s.bg+';border-color:'+s.color+'30';sNode.innerHTML='<span class="stage-chevron '+(sOpen?'open':'')+'" style="color:'+s.color+'">&#9654;</span><span class="stage-label" style="color:'+s.tx+'">'+s.label+'</span><span class="stage-badge" style="background:'+s.bdg+';color:'+s.tx+'">'+itemsDone+'/'+s.items.length+'</span><button class="note-btn '+(S[s.id].note?'has-note':'')+'" onclick="event.stopPropagation();toggleStageNote(\''+s.id+'\')">&#9998;</button>';sNode.addEventListener('click',()=>{S[s.id].open=!S[s.id].open;renderHierarchy();});div.appendChild(sNode);const sNote=document.createElement('div');sNote.className='stage-note'+(S[s.id].noteOpen?' open':'');sNote.innerHTML='<textarea placeholder="Stage notes">'+S[s.id].note+'</textarea>';sNote.querySelector('textarea').addEventListener('input',e=>{S[s.id].note=e.target.value;});div.appendChild(sNote);const children=document.createElement('div');children.className='children'+(sOpen?' open':'');const vline=document.createElement('div');vline.style.cssText='position:absolute;left:22px;top:0;bottom:10px;width:1px;background:'+s.color+'40;pointer-events:none';children.appendChild(vline);s.items.forEach((it)=>{const iState=S[it.id];const wrap=document.createElement('div');wrap.style.cssText='position:relative;padding-left:44px;margin-bottom:2px';const hline=document.createElement('div');hline.style.cssText='position:absolute;left:22px;top:18px;width:22px;height:1px;background:'+s.color+'40;pointer-events:none';wrap.appendChild(hline);const dot=document.createElement('div');dot.style.cssText='position:absolute;left:18px;top:14px;width:9px;height:9px;border-radius:50%;background:'+(iState.done?s.color:'var(--bg)')+';border:1.5px solid '+s.color+';pointer-events:none';wrap.appendChild(dot);const row=document.createElement('div');row.className='item-row';const cc=document.createElement('div');cc.className='item-check-col';cc.innerHTML='<div class="chk '+(iState.done?'done':'')+'"></div>';cc.addEventListener('click',()=>{iState.done=!iState.done;renderHierarchy();});const body=document.createElement('div');body.className='item-body';body.innerHTML='<div class="item-title '+(iState.done?'done':'')+'">'+it.title+'</div><div class="item-sub">'+it.sub+'</div>';body.addEventListener('click',()=>{iState.done=!iState.done;renderHierarchy();});const right=document.createElement('div');right.className='item-right';right.innerHTML='<span class="agency-pill" style="background:'+it.agBg+';color:'+it.agTx+'">'+it.ag+'</span><button class="note-btn '+(iState.note?'has-note':'')+'" onclick="toggleNote(\''+it.id+'\')">&#9993;</button>';row.appendChild(cc);row.appendChild(body);row.appendChild(right);wrap.appendChild(row);const np=document.createElement('div');np.className='note-panel'+(iState.noteOpen?' open':'');np.innerHTML='<textarea placeholder="Notes, responsible person, due date">'+iState.note+'</textarea>';np.querySelector('textarea').addEventListener('input',e=>{iState.note=e.target.value;right.querySelector('.note-btn').className='note-btn'+(iState.note?' has-note':'');});wrap.appendChild(np);children.appendChild(wrap);});div.appendChild(children);tree.appendChild(div);});const pct=total>0?Math.round(done/total*100):0;document.getElementById('pf-h').style.width=pct+'%';document.getElementById('pl-h').textContent=done+' / '+total+' ('+pct+'%)';}
-function toggleNote(id){S[id].noteOpen=!S[id].noteOpen;renderHierarchy();}
-function toggleStageNote(id){S[id].noteOpen=!S[id].noteOpen;renderHierarchy();}
-function expandAll(){STAGES.forEach(s=>{S[s.id].open=true;});renderHierarchy();}
-function collapseAll(){STAGES.forEach(s=>{S[s.id].open=false;});renderHierarchy();}
-function refreshProg(){let total=0,done=0;STAGES.forEach(s=>{total+=s.items.length;s.items.forEach(it=>{if(S[it.id].done)done++;});});const pct=total>0?Math.round(done/total*100):0;['h','c'].forEach(x=>{const pf=document.getElementById('pf-'+x);const pl=document.getElementById('pl-'+x);if(pf)pf.style.width=pct+'%';if(pl)pl.textContent=done+' / '+total+' ('+pct+'%)';});}
-function exportNotes(){let lines=['WA Open Pit Mine Approval Tracker','========================================',''];STAGES.forEach((s)=>{lines.push(s.label.toUpperCase());if(S[s.id].note)lines.push('   Stage note: '+S[s.id].note);s.items.forEach(it=>{const st=S[it.id];lines.push('   '+(st.done?'[x]':'[ ]')+' '+it.title+' ('+it.ag+')');if(st.note)lines.push('       Note: '+st.note);});lines.push('');});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/plain'}));a.download='mine-approval-tracker.txt';a.click();}
-function renderChecklist(){const container=document.getElementById('checklist');if(!container)return;container.innerHTML='';STAGES.forEach(s=>{const itemsDone=s.items.filter(it=>S[it.id].done).length;const sOpen=S[s.id].open;const stageDiv=document.createElement('div');stageDiv.style.cssText='margin-bottom:6px;border-radius:8px;border:0.5px solid var(--border);overflow:hidden';const hdr=document.createElement('div');hdr.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;background:'+s.bg+';border-left:3px solid '+s.color;hdr.innerHTML='<span style="color:'+s.tx+';font-size:12px;font-weight:500;flex:1">'+s.label+'</span><span style="font-size:11px;color:'+s.tx+';background:'+s.bdg+';padding:2px 7px;border-radius:10px;font-weight:500">'+itemsDone+'/'+s.items.length+'</span>';hdr.addEventListener('click',()=>{S[s.id].open=!S[s.id].open;renderChecklist();});stageDiv.appendChild(hdr);if(sOpen){s.items.forEach(it=>{const iState=S[it.id];const row=document.createElement('div');row.style.cssText='display:flex;align-items:flex-start;border-top:0.5px solid var(--border);background:var(--bg)';const cc=document.createElement('div');cc.style.cssText='padding:10px;cursor:pointer;flex-shrink:0';cc.innerHTML='<div class="chk '+(iState.done?'done':'')+'"></div>';cc.addEventListener('click',()=>{iState.done=!iState.done;renderChecklist();renderHierarchy();});const body=document.createElement('div');body.style.cssText='flex:1;padding:8px 0;cursor:pointer;min-width:0';body.innerHTML='<div class="item-title '+(iState.done?'done':'')+'" style="font-size:12px;font-weight:500">'+it.title+'</div><div class="item-sub" style="font-size:11px;color:var(--text2);margin-top:2px">'+it.sub+'</div>';body.addEventListener('click',()=>{iState.done=!iState.done;renderChecklist();renderHierarchy();});const right=document.createElement('div');right.style.cssText='display:flex;align-items:center;gap:4px;padding:8px;flex-shrink:0';right.innerHTML='<span class="agency-pill" style="background:'+it.agBg+';color:'+it.agTx+';font-size:10px;padding:2px 6px;border-radius:10px;font-weight:500">'+it.ag+'</span>';row.appendChild(cc);row.appendChild(body);row.appendChild(right);stageDiv.appendChild(row);});}container.appendChild(stageDiv);});refreshProg();}
-function computeSchedule(){const starts={};const visited=new Set();function resolve(id){if(visited.has(id))return starts[id];visited.add(id);const t=ALL_ITEMS.find(x=>x.id===id);if(!t.deps.length){starts[id]=0;return 0;}const depEnd=Math.max(...t.deps.map(d=>resolve(d)+ALL_ITEMS.find(x=>x.id===d).dur));starts[id]=depEnd+(lags[id]||0);return starts[id];}ALL_ITEMS.forEach(t=>resolve(t.id));return starts;}
-function computeCriticalPath(starts){const projectEnd=Math.max(...ALL_ITEMS.map(t=>starts[t.id]+t.dur));const ls={};const lf={};ALL_ITEMS.forEach(t=>{lf[t.id]=projectEnd;ls[t.id]=projectEnd-t.dur;});[...ALL_ITEMS].reverse().forEach(t=>{ALL_ITEMS.forEach(o=>{if(o.deps.includes(t.id)){lf[t.id]=Math.min(lf[t.id],ls[o.id]);ls[t.id]=lf[t.id]-t.dur;}});});const critical=new Set();ALL_ITEMS.forEach(t=>{if(Math.round(ls[t.id]-starts[t.id])<=0)critical.add(t.id);});return critical;}
-function toggleCP(){showCP=!showCP;document.getElementById('btn-cp').classList.toggle('active',showCP);renderGantt();}
-function toggleDep(){showDep=!showDep;document.getElementById('btn-dep').classList.toggle('active',showDep);renderGantt();}
-function resetGantt(){Object.keys(lags).forEach(k=>delete lags[k]);renderGantt();}
-function renderGantt(){const starts=computeSchedule();const critical=computeCriticalPath(starts);const totalMo=Math.max(...ALL_ITEMS.map(t=>starts[t.id]+t.dur))+2;const COL_W=Math.max(20,Math.floor(500/totalMo));const ROW_H=24;let html='<table><thead><tr><th class="th-lbl">Approval</th>';for(let m=0;m<totalMo;m++){const yr=Math.floor(m/12)+1;const mo=m%12;const names=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];html+='<th class="th-mo" style="width:'+COL_W+'px;min-width:'+COL_W+'px">'+(mo===0?'Y'+yr:(COL_W>28?names[mo]:''))
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #ffffff;
+    --bg2:       #f5f4f0;
+    --bg3:       #eeecea;
+    --text:      #1a1a18;
+    --text2:     #5f5e5a;
+    --text3:     #9b9990;
+    --border:    rgba(0,0,0,0.10);
+    --border2:   rgba(0,0,0,0.18);
+    --radius:    8px;
+    --font:      -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:        #1c1c1a;
+      --bg2:       #252523;
+      --bg3:       #2e2e2b;
+      --text:      #f0ede8;
+      --text2:     #a8a69f;
+      --text3:     #6b6963;
+      --border:    rgba(255,255,255,0.10);
+      --border2:   rgba(255,255,255,0.18);
+    }
+  }
+
+  body { font-family: var(--font); background: var(--bg3); color: var(--text); font-size: 14px; min-height: 100vh; }
+
+  /* ── Layout ── */
+  .app { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  header { margin-bottom: 20px; }
+  header h1 { font-size: 20px; font-weight: 600; color: var(--text); }
+  header p  { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border2); margin-bottom: 20px; }
+  .tab  { padding: 8px 16px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer;
+          border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: #1D9E75; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Stat cards ── */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat  { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius);
+           padding: 10px 14px; }
+  .stat-val { font-size: 22px; font-weight: 600; }
+  .stat-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* ── Toolbar ── */
+  .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .btn  { font-size: 12px; padding: 5px 11px; border: 0.5px solid var(--border2);
+          border-radius: 6px; background: var(--bg); color: var(--text2);
+          cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+  .btn:hover  { background: var(--bg2); color: var(--text); }
+  .btn.active { background: var(--bg2); color: var(--text); border-color: var(--border2); outline: 1.5px solid #1D9E75; outline-offset: 1px; }
+  .sep  { width: 1px; height: 20px; background: var(--border); }
+  .hint { font-size: 11px; color: var(--text3); margin-left: auto; }
+
+  /* ── Gantt outer ── */
+  .gantt-outer { overflow-x: auto; border: 0.5px solid var(--border2); border-radius: 10px; position: relative; background: var(--bg); }
+  table { border-collapse: collapse; width: 100%; min-width: 700px; }
+  thead tr { border-bottom: 1px solid var(--border2); }
+  .th-lbl { width: 220px; min-width: 220px; padding: 7px 12px; font-size: 11px; font-weight: 600;
+            color: var(--text2); text-align: left; background: var(--bg2); position: sticky; left: 0; z-index: 3; }
+  .th-mo  { padding: 7px 2px; font-size: 10px; font-weight: 500; color: var(--text2); text-align: center;
+            background: var(--bg2); border-left: 0.5px solid var(--border); }
+  .lbl-cell { padding: 4px 8px 4px 12px; font-size: 11px; color
