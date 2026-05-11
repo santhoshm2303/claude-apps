@@ -14,516 +14,156 @@
   --text: #1a1a18;
   --text2: #5a5a52;
   --text3: #9a9a90;
-  --accent: #2c6e49;
-  --accent2: #40916c;
-  --approved: #2c6e49;
-  --approved-bg: #d8f3dc;
-  --pending: #b5640a;
-  --pending-bg: #fef3e2;
-  --not-started: #6b7280;
-  --not-started-bg: #f3f4f6;
-  --rejected: #b91c1c;
-  --rejected-bg: #fee2e2;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; min-height: 100vh; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  min-height: 100vh;
-}
-
-/* Header */
 header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
-  height: 60px;
+  padding: 0 1.5rem;
+  height: 58px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: sticky; top: 0; z-index: 100;
   box-shadow: var(--shadow);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-icon {
-  width: 32px; height: 32px;
-  background: var(--accent);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  color: white;
-  font-size: 16px;
-}
-
-.logo-text {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-
-.logo-sub {
-  font-size: 0.7rem;
-  color: var(--text3);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.05em;
-  margin-top: 1px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
   gap: 1rem;
 }
-
-/* Project selector dropdown */
+.logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.logo-icon { width: 30px; height: 30px; background: #1D9E75; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 15px; }
+.logo-text { font-size: 0.92rem; font-weight: 600; }
+.logo-sub { font-size: 0.65rem; color: var(--text3); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
+.header-right { display: flex; align-items: center; gap: 0.75rem; }
 .project-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  color: var(--text);
-  cursor: pointer;
-  min-width: 200px;
-  outline: none;
-  appearance: none;
+  background: var(--bg); border: 1px solid var(--border2); border-radius: 7px;
+  padding: 6px 28px 6px 10px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem;
+  color: var(--text); cursor: pointer; min-width: 190px; outline: none; appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a5a52' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
+  background-repeat: no-repeat; background-position: right 8px center;
 }
+.btn-add { background: #1D9E75; color: white; border: none; padding: 7px 14px; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+.btn-add:hover { background: #178a63; }
 
-.btn-add {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 7px 16px;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.15s;
+main { max-width: 860px; margin: 0 auto; padding: 1.5rem; }
+
+/* Project info bar */
+.project-bar {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.1rem 1.5rem; margin-bottom: 1.2rem; box-shadow: var(--shadow);
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
 }
-.btn-add:hover { background: var(--accent2); }
+.project-title { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; }
+.project-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 4px; }
+.meta-chip { font-size: 0.72rem; color: var(--text2); font-family: 'DM Mono', monospace; background: var(--bg); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); }
+.bar-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.overall-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 500; font-family: 'DM Mono', monospace; }
 
-/* Main layout */
-main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Progress bar */
+.prog-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.2rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: 2rem; }
+.prog-wrap { flex: 1; }
+.prog-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text3); font-family: 'DM Mono', monospace; margin-bottom: 5px; }
+.prog-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, #1D9E75, #40916c); border-radius: 99px; transition: width 0.5s ease; }
+.prog-stats { display: flex; gap: 1.5rem; flex-shrink: 0; }
+.pstat { text-align: center; }
+.pstat-num { font-size: 1.3rem; font-weight: 600; line-height: 1; }
+.pstat-lbl { font-size: 0.65rem; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; }
+
+/* Stage groups */
+.stage-group { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; overflow: hidden; box-shadow: var(--shadow); }
+.stage-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.85rem 1.2rem; cursor: pointer;
+  border-left: 4px solid;
+  transition: background 0.1s;
+  user-select: none;
 }
+.stage-header:hover { background: var(--bg); }
+.stage-chevron { font-size: 0.7rem; color: var(--text3); transition: transform 0.2s; margin-left: auto; flex-shrink: 0; }
+.stage-chevron.open { transform: rotate(90deg); }
+.stage-label { font-weight: 600; font-size: 0.88rem; flex: 1; }
+.stage-progress { font-size: 0.7rem; font-family: 'DM Mono', monospace; color: var(--text3); flex-shrink: 0; }
 
-/* Project header card */
-.project-header {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem 2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+/* Stage items */
+.stage-items { display: none; border-top: 1px solid var(--border); }
+.stage-items.open { display: block; }
+
+.approval-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.7rem 1.2rem 0.7rem 1.5rem;
+  border-bottom: 1px solid var(--bg);
+  cursor: pointer; transition: background 0.1s;
 }
+.approval-item:last-child { border-bottom: none; }
+.approval-item:hover { background: var(--bg); }
 
-.project-title {
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--text);
-}
-
-.project-meta {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.8rem;
-  color: var(--text2);
-  font-family: 'DM Mono', monospace;
-}
-
-.meta-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--border2);
-}
-
-.overall-badge {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Progress summary */
-.progress-summary {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.2rem 2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.progress-bar-wrap {
-  flex: 1;
-}
-
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: var(--text2);
-  margin-bottom: 6px;
-  font-family: 'DM Mono', monospace;
-}
-
-.progress-track {
-  height: 6px;
-  background: var(--border);
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  border-radius: 99px;
-  transition: width 0.6s ease;
-}
-
-.progress-stats {
-  display: flex;
-  gap: 2rem;
-  flex-shrink: 0;
-}
-
-.pstat {
-  text-align: center;
-}
-
-.pstat-num {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1;
-}
-
-.pstat-label {
-  font-size: 0.7rem;
-  color: var(--text3);
-  font-family: 'DM Mono', monospace;
-  margin-top: 2px;
-}
-
-/* Pathway flowchart */
-.pathway {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.stage-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 0;
-  padding: 1.1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: relative;
-  transition: box-shadow 0.15s;
-  cursor: pointer;
-}
-
-.stage-card:first-child { border-radius: 12px 12px 0 0; }
-.stage-card:last-child { border-radius: 0 0 12px 12px; }
-.stage-card:not(:last-child) { border-bottom: none; }
-.stage-card:hover { z-index: 1; box-shadow: var(--shadow-md); }
-
-/* Connector line */
-.stage-card:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  left: 2.75rem;
-  bottom: -12px;
-  width: 2px;
-  height: 12px;
-  background: var(--border2);
-  z-index: 2;
-}
-
-.stage-num {
-  width: 28px; height: 28px;
-  border-radius: 50%;
+.item-check {
+  width: 18px; height: 18px; border-radius: 50%; border: 2px solid;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.72rem;
-  font-weight: 500;
-  flex-shrink: 0;
-  border: 2px solid;
+  flex-shrink: 0; font-size: 10px;
 }
+.item-body { flex: 1; min-width: 0; }
+.item-title { font-size: 0.83rem; font-weight: 500; }
+.item-sub { font-size: 0.72rem; color: var(--text3); margin-top: 1px; }
+.item-right { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.agency-pill { font-size: 0.67rem; padding: 2px 7px; border-radius: 10px; font-weight: 500; font-family: 'DM Mono', monospace; white-space: nowrap; }
+.item-status { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-family: 'DM Mono', monospace; white-space: nowrap; }
 
-.num-approved { background: var(--approved-bg); color: var(--approved); border-color: var(--approved); }
-.num-pending { background: var(--pending-bg); color: var(--pending); border-color: var(--pending); }
-.num-not-started { background: var(--not-started-bg); color: var(--not-started); border-color: var(--border2); }
-.num-rejected { background: var(--rejected-bg); color: var(--rejected); border-color: var(--rejected); }
+/* Inline edit row */
+.item-edit { display: none; padding: 0.5rem 1.2rem 0.7rem 3.5rem; background: #fafaf8; border-bottom: 1px solid var(--border); gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.item-edit.open { display: flex; }
+.edit-sel { padding: 4px 8px; border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; background: white; outline: none; }
+.edit-date { padding: 4px 8px; border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 0.75rem; outline: none; }
+.edit-notes { flex: 1; min-width: 180px; padding: 4px 8px; border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; outline: none; }
+.btn-done { background: #1D9E75; color: white; border: none; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
 
-.stage-info { flex: 1; }
-
-.stage-name {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.stage-desc {
-  font-size: 0.75rem;
-  color: var(--text3);
-  margin-top: 2px;
-}
-
-.stage-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0;
-}
-
-.stage-date {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--text3);
-}
-
-.stage-status {
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 0.72rem;
-  font-weight: 500;
-  font-family: 'DM Mono', monospace;
-  white-space: nowrap;
-}
-
-.status-approved { background: var(--approved-bg); color: var(--approved); }
-.status-pending { background: var(--pending-bg); color: var(--pending); }
-.status-not-started { background: var(--not-started-bg); color: var(--not-started); }
-.status-rejected { background: var(--rejected-bg); color: var(--rejected); }
-
-/* Stage edit inline */
-.stage-edit { display: none; padding: 0.75rem 1.5rem 0.75rem 4.5rem; background: #f9f9f7; border-top: 1px solid var(--border); }
-.stage-edit.open { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
-.edit-select { padding: 5px 10px; border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; background: white; color: var(--text); outline: none; }
-.edit-date { padding: 5px 10px; border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text); outline: none; }
-.btn-save-stage { background: var(--accent); color: white; border: none; padding: 5px 14px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+/* Status colours */
+.s-approved { background: #d8f3dc; color: #2c6e49; border-color: #2c6e49; }
+.s-pending { background: #fef3e2; color: #b5640a; border-color: #b5640a; }
+.s-not-started { background: #f3f4f6; color: #6b7280; border-color: #d1d5db; }
+.s-rejected { background: #fee2e2; color: #b91c1c; border-color: #b91c1c; }
+.badge-approved { background: #d8f3dc; color: #2c6e49; }
+.badge-pending { background: #fef3e2; color: #b5640a; }
+.badge-not-started { background: #f3f4f6; color: #6b7280; }
+.badge-rejected { background: #fee2e2; color: #b91c1c; }
 
 /* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: var(--text3);
-}
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--text3); }
 .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
 .empty-state h3 { font-size: 1rem; font-weight: 500; color: var(--text2); margin-bottom: 0.5rem; }
-.empty-state p { font-size: 0.85rem; }
 
 /* Modal */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(2px);
-  z-index: 500;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); backdrop-filter: blur(2px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 1rem; }
 .modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: 14px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15); animation: mIn 0.2s ease; }
+@keyframes mIn { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-header { padding: 1.3rem 1.5rem 0.9rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-size: 1.05rem; font-weight: 600; }
+.modal-close { background: var(--bg); border: 1px solid var(--border); color: var(--text2); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
+.modal-body { padding: 1.3rem 1.5rem; }
+.form-group { margin-bottom: 0.9rem; }
+.form-label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text2); margin-bottom: 4px; }
+.form-input, .form-select { width: 100%; padding: 7px 10px; border: 1px solid var(--border2); border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text); background: white; outline: none; }
+.form-input:focus, .form-select:focus { border-color: #1D9E75; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.modal-footer { padding: 0.9rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 0.6rem; }
+.btn-cancel { background: var(--bg); border: 1px solid var(--border2); color: var(--text2); padding: 7px 16px; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; cursor: pointer; }
+.btn-primary { background: #1D9E75; border: none; color: white; padding: 7px 16px; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 500; cursor: pointer; }
+.btn-primary:hover { background: #178a63; }
 
-.modal {
-  background: var(--surface);
-  border-radius: 16px;
-  width: 100%;
-  max-width: 560px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  animation: modalIn 0.2s ease;
-}
+/* small util buttons */
+.btn-sm { background: var(--bg); border: 1px solid var(--border2); color: var(--text2); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
+.btn-sm-red { background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
 
-@keyframes modalIn {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-header {
-  padding: 1.5rem 1.5rem 1rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.modal-close {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  width: 30px; height: 30px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.modal-body { padding: 1.5rem; }
-
-.form-group { margin-bottom: 1rem; }
-
-.form-label {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--text2);
-  margin-bottom: 5px;
-}
-
-.form-input, .form-select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.88rem;
-  color: var(--text);
-  background: var(--surface);
-  outline: none;
-  transition: border-color 0.15s;
-}
-.form-input:focus, .form-select:focus { border-color: var(--accent2); }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-.stages-list { margin-top: 0.5rem; }
-
-.stage-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-}
-.stage-item:last-child { border-bottom: none; }
-
-.stage-item-name {
-  flex: 1;
-  font-size: 0.82rem;
-  color: var(--text);
-}
-
-.btn-add-stage {
-  background: transparent;
-  border: 1px dashed var(--border2);
-  color: var(--text2);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 0.5rem;
-  transition: all 0.15s;
-}
-.btn-add-stage:hover { border-color: var(--accent); color: var(--accent); }
-
-.modal-footer {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.btn-cancel {
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  color: var(--text2);
-  padding: 8px 18px;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: var(--accent);
-  border: none;
-  color: white;
-  padding: 8px 18px;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.btn-primary:hover { background: var(--accent2); }
-
-.badge-approved { background: var(--approved-bg); color: var(--approved); }
-.badge-pending { background: var(--pending-bg); color: var(--pending); }
-.badge-not-started { background: var(--not-started-bg); color: var(--not-started); }
-.badge-rejected { background: var(--rejected-bg); color: var(--rejected); }
-
-@media (max-width: 600px) {
+@media (max-width:600px) {
   main { padding: 1rem; }
   header { padding: 0 1rem; }
-  .project-header { flex-direction: column; }
-  .progress-summary { flex-direction: column; gap: 1rem; }
-  .progress-stats { justify-content: space-around; width: 100%; }
+  .prog-stats { gap: 1rem; }
   .form-row { grid-template-columns: 1fr; }
-  .header-right { gap: 0.5rem; }
-  .project-selector { min-width: 140px; font-size: 0.78rem; }
+  .project-selector { min-width: 130px; font-size: 0.78rem; }
 }
 </style>
 </head>
@@ -546,7 +186,7 @@ main {
 </header>
 
 <main id="mainContent">
-  <div class="empty-state" id="emptyState">
+  <div class="empty-state">
     <div class="icon">🏗️</div>
     <h3>No project selected</h3>
     <p>Select a project from the dropdown or add a new one to get started.</p>
@@ -573,12 +213,12 @@ main {
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Operator / Company</label>
+          <label class="form-label">Operator</label>
           <input class="form-input" id="fOperator" placeholder="e.g. Fortescue Ltd">
         </div>
         <div class="form-group">
           <label class="form-label">Commodity</label>
-          <input class="form-input" id="fCommodity" placeholder="e.g. Iron Ore, Gold">
+          <input class="form-input" id="fCommodity" placeholder="e.g. Iron Ore">
         </div>
       </div>
       <div class="form-group">
@@ -590,11 +230,6 @@ main {
           <option value="rejected">Rejected</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Approval Stages</label>
-        <div class="stages-list" id="stagesList"></div>
-        <button class="btn-add-stage" onclick="addStageRow()">+ Add Stage</button>
-      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -604,222 +239,255 @@ main {
 </div>
 
 <script>
+// ── Default WA approval stages with all sub-items ──────────────────────────
 const DEFAULT_STAGES = [
-  { name: 'Native Title Clearance', desc: 'NNTT / Federal Court clearance' },
-  { name: 'Environmental Impact Assessment', desc: 'EPA referral and assessment' },
-  { name: 'Mining Proposal (DMIRS)', desc: 'Department of Mines approval' },
-  { name: 'Works Approval (EPA)', desc: 'Premises and works licence' },
-  { name: 'Water Licence (DoW)', desc: 'Department of Water licence' },
-  { name: 'Heritage Survey', desc: 'Aboriginal heritage clearance' },
-  { name: 'Mine Closure Plan', desc: 'DMP approved closure plan' },
-  { name: 'State Agreement / MOU', desc: 'State Agreement execution' },
+  { id:'s1', label:'1. Tenement Conversion', color:'#1D9E75', bg:'#E1F5EE', tx:'#085041', agBg:'#9FE1CB', agTx:'#085041',
+    items:[
+      { id:'a1', title:'Mining Lease application (s.74)', sub:'Convert EL/ELA to ML — Mining Act 1978', agency:'DEMIRS' },
+      { id:'a2', title:'Mining Proposal (MP)', sub:'Required before ML grant — submitted to DEMIRS', agency:'DEMIRS' },
+    ]
+  },
+  { id:'s2', label:'2. Environmental Approvals', color:'#7F77DD', bg:'#EEEDFE', tx:'#3C3489', agBg:'#CECBF6', agTx:'#3C3489',
+    items:[
+      { id:'b1', title:'Part IV EPA referral', sub:'EIA referral — EP Act 1986', agency:'EPA/DWER' },
+      { id:'b2', title:'Level of assessment determined', sub:'PI / PER / API / Scoping document', agency:'EPA' },
+      { id:'b3', title:'EIA / public review', sub:'PER public comment + EPA assessment', agency:'EPA' },
+      { id:'b4', title:'Ministerial Statement issued', sub:'Binding environmental conditions', agency:'Min. Env.' },
+      { id:'b5', title:'s.5C EP Act conditions compliance', sub:'Conditions compliance program established', agency:'DWER' },
+    ]
+  },
+  { id:'s3', label:'3. Native Title & Heritage', color:'#378ADD', bg:'#E6F1FB', tx:'#0C447C', agBg:'#B5D4F4', agTx:'#0C447C',
+    items:[
+      { id:'c1', title:'Right to Negotiate (RTN)', sub:'6-month statutory negotiation — NTA 1993', agency:'NNTT' },
+      { id:'c2', title:'ILUA / CLA executed', sub:'Negotiated agreement with native title holders', agency:'NTRBs' },
+      { id:'c3', title:'Aboriginal Heritage Survey', sub:'Desktop + field survey — ethnographic/archaeological', agency:'DPLH/AAHC' },
+      { id:'c4', title:'s.18 AH Minister consent', sub:'Ministerial consent — use of AH sites', agency:'DPLH' },
+    ]
+  },
+  { id:'s4', label:'4. Mining Act Approvals', color:'#BA7517', bg:'#FAEEDA', tx:'#633806', agBg:'#FAC775', agTx:'#633806',
+    items:[
+      { id:'d1', title:'Mine Disturbance & Closure Plan (MDCP)', sub:'Submitted with Mining Proposal; financial assurance set', agency:'DEMIRS' },
+      { id:'d2', title:'Mining Lease (ML) granted', sub:'Issued by Minister for Mines — Mining Act 1978', agency:'Min. Mines' },
+      { id:'d3', title:'Programme of Work (PoW) approved', sub:'Submitted per disturbance area / stage', agency:'DEMIRS' },
+      { id:'d4', title:'Blast / noise / dust approvals', sub:'Blasting approvals (Mines Safety); EP Act noise assessment', agency:'DEMIRS' },
+    ]
+  },
+  { id:'s5', label:'5. Water & Land Use', color:'#D85A30', bg:'#FAECE7', tx:'#4A1B0C', agBg:'#F5C4B3', agTx:'#4A1B0C',
+    items:[
+      { id:'e1', title:'Water licence — s.5C RiWI Act', sub:'Groundwater abstraction / dewatering licence', agency:'DWER' },
+      { id:'e2', title:'Bed & Banks permit — s.17 RiWI Act', sub:'Work in/near watercourses or wetlands', agency:'DWER' },
+      { id:'e3', title:'Clearing permit — Part V EP Act', sub:'Vegetation clearing approval (≥0.5 ha or threatened spp.)', agency:'DWER' },
+      { id:'e4', title:'Planning approval', sub:'If required by WAPC or Local Government', agency:'WAPC/LGA' },
+    ]
+  },
+  { id:'s6', label:'6. Access to Ground', color:'#3B6D11', bg:'#EAF3DE', tx:'#173404', agBg:'#B8DFA0', agTx:'#173404',
+    items:[
+      { id:'f1', title:'Works Approval (EP Act)', sub:'Prescribed premises licence — after ML & conditions', agency:'DWER' },
+      { id:'f2', title:'Miscellaneous Licence', sub:'Access roads, camps, infrastructure', agency:'DEMIRS' },
+      { id:'f3', title:'Access to ground confirmed', sub:'All key approvals converged — operations may commence', agency:'All' },
+    ]
+  },
+  { id:'s7', label:'7. Safety & Federal', color:'#5F5E5A', bg:'#F1EFE8', tx:'#2C2C2A', agBg:'#D0CEC6', agTx:'#2C2C2A',
+    items:[
+      { id:'g1', title:'Safety Management System (SMS/HSMS)', sub:'Notified to inspector — Mines Safety & Inspection Act', agency:'DEMIRS' },
+      { id:'g2', title:'EPBC federal referral', sub:'If MNES triggered — runs parallel early in process', agency:'DCCEEW' },
+      { id:'g3', title:'Mine operations commence', sub:'All approvals converged — operations begin', agency:'Multi' },
+    ]
+  },
 ];
 
-let projects = JSON.parse(localStorage.getItem('wa-mine-tracker-v2') || '[]');
-let currentProjectId = null;
-let editingId = null;
-let openStage = null;
+function makeStages() {
+  return DEFAULT_STAGES.map(sg => ({
+    ...sg,
+    items: sg.items.map(it => ({ ...it, status: 'not-started', date: '', notes: '' }))
+  }));
+}
 
-// Seed demo data
-if (projects.length === 0) {
+let projects = JSON.parse(localStorage.getItem('wa-mine-v3') || '[]');
+let currentId = null;
+let editingId = null;
+let openStages = new Set();
+let openItems = new Set();
+
+if (!projects.length) {
   projects = [
     {
       id: 1, name: 'Pilbara Iron Ore Extension', region: 'Pilbara, WA',
-      operator: 'Fortescue Ltd', commodity: 'Iron Ore', status: 'pending',
-      created: '2025-08-01',
-      stages: [
-        { name: 'Native Title Clearance', desc: 'NNTT / Federal Court clearance', status: 'approved', date: '2025-09-14' },
-        { name: 'Environmental Impact Assessment', desc: 'EPA referral and assessment', status: 'approved', date: '2025-11-02' },
-        { name: 'Mining Proposal (DMIRS)', desc: 'Department of Mines approval', status: 'pending', date: '' },
-        { name: 'Works Approval (EPA)', desc: 'Premises and works licence', status: 'not-started', date: '' },
-        { name: 'Water Licence (DoW)', desc: 'Department of Water licence', status: 'not-started', date: '' },
-        { name: 'Heritage Survey', desc: 'Aboriginal heritage clearance', status: 'approved', date: '2025-10-08' },
-        { name: 'Mine Closure Plan', desc: 'DMP approved closure plan', status: 'not-started', date: '' },
-      ]
+      operator: 'Fortescue Ltd', commodity: 'Iron Ore', status: 'pending', created: '2025-08-01',
+      stages: makeStages().map((sg, si) => ({
+        ...sg,
+        items: sg.items.map((it, ii) => ({
+          ...it,
+          status: (si===0) ? 'approved' : (si===1 && ii<2) ? 'approved' : (si===1 && ii===2) ? 'pending' : 'not-started',
+          date: (si===0 && ii===0) ? '2025-09-14' : (si===0 && ii===1) ? '2025-10-20' : (si===1 && ii===0) ? '2025-11-02' : (si===1 && ii===1) ? '2025-12-15' : ''
+        }))
+      }))
     },
     {
       id: 2, name: 'Goldfields Deep Pit Stage 2', region: 'Kalgoorlie, WA',
-      operator: 'Northern Star Resources', commodity: 'Gold', status: 'approved',
-      created: '2024-03-15',
-      stages: [
-        { name: 'Native Title Clearance', desc: 'NNTT / Federal Court clearance', status: 'approved', date: '2024-04-20' },
-        { name: 'Environmental Impact Assessment', desc: 'EPA referral and assessment', status: 'approved', date: '2024-07-11' },
-        { name: 'Mining Proposal (DMIRS)', desc: 'Department of Mines approval', status: 'approved', date: '2024-09-03' },
-        { name: 'Works Approval (EPA)', desc: 'Premises and works licence', status: 'approved', date: '2024-10-28' },
-        { name: 'Water Licence (DoW)', desc: 'Department of Water licence', status: 'approved', date: '2024-12-15' },
-        { name: 'Heritage Survey', desc: 'Aboriginal heritage clearance', status: 'approved', date: '2024-05-30' },
-        { name: 'Mine Closure Plan', desc: 'DMP approved closure plan', status: 'approved', date: '2025-01-20' },
-      ]
+      operator: 'Northern Star Resources', commodity: 'Gold', status: 'approved', created: '2024-03-15',
+      stages: makeStages().map(sg => ({ ...sg, items: sg.items.map(it => ({ ...it, status: 'approved', date: '2024-06-01' })) }))
     },
   ];
   save();
 }
 
-function save() {
-  localStorage.setItem('wa-mine-tracker-v2', JSON.stringify(projects));
+function save() { localStorage.setItem('wa-mine-v3', JSON.stringify(projects)); }
+
+const SL = { approved: 'Approved', pending: 'In Progress', 'not-started': 'Not Started', rejected: 'Rejected' };
+
+function calcProg(stages) {
+  const all = stages.flatMap(s => s.items);
+  if (!all.length) return { pct: 0, done: 0, total: 0 };
+  const done = all.filter(i => i.status === 'approved').length;
+  return { pct: Math.round(done / all.length * 100), done, total: all.length };
 }
 
-function statusLabel(s) {
-  return { approved: 'Approved', pending: 'In Progress', 'not-started': 'Not Started', rejected: 'Rejected' }[s] || s;
-}
-
-function calcProgress(stages) {
-  if (!stages.length) return 0;
-  return Math.round(stages.filter(s => s.status === 'approved').length / stages.length * 100);
+function stageProg(stage) {
+  const done = stage.items.filter(i => i.status === 'approved').length;
+  return `${done}/${stage.items.length}`;
 }
 
 function renderSelector() {
   const sel = document.getElementById('projectSelector');
-  const current = sel.value;
   sel.innerHTML = '<option value="">— Select Project —</option>';
   projects.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.name;
-    if (p.id == currentProjectId) opt.selected = true;
-    sel.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = p.id; o.textContent = p.name;
+    if (p.id === currentId) o.selected = true;
+    sel.appendChild(o);
   });
 }
 
 function selectProject(id) {
-  currentProjectId = id ? parseInt(id) : null;
-  renderProject();
+  currentId = id ? parseInt(id) : null;
+  openStages = new Set();
+  openItems = new Set();
+  render();
 }
 
-function renderProject() {
+function render() {
   const main = document.getElementById('mainContent');
-  const empty = document.getElementById('emptyState');
-
-  if (!currentProjectId) {
-    main.innerHTML = `<div class="empty-state" id="emptyState">
-      <div class="icon">🏗️</div>
-      <h3>No project selected</h3>
-      <p>Select a project from the dropdown or add a new one to get started.</p>
-    </div>`;
+  if (!currentId) {
+    main.innerHTML = `<div class="empty-state"><div class="icon">🏗️</div><h3>No project selected</h3><p>Select a project from the dropdown or add a new one.</p></div>`;
     return;
   }
-
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x.id === currentId);
   if (!p) return;
+  const { pct, done, total } = calcProg(p.stages);
+  const pending = p.stages.flatMap(s => s.items).filter(i => i.status === 'pending').length;
+  const remaining = total - done - pending - p.stages.flatMap(s => s.items).filter(i => i.status === 'rejected').length;
 
-  const prog = calcProgress(p.stages);
-  const approved = p.stages.filter(s => s.status === 'approved').length;
-  const total = p.stages.length;
+  const stagesHtml = p.stages.map((sg, si) => {
+    const isOpen = openStages.has(si);
+    const itemsHtml = sg.items.map((it, ii) => {
+      const key = `${si}-${ii}`;
+      const isEditOpen = openItems.has(key);
+      return `
+        <div class="approval-item" onclick="toggleItem('${key}')">
+          <div class="item-check s-${it.status}">${it.status==='approved'?'✓':it.status==='rejected'?'✕':it.status==='pending'?'…':''}</div>
+          <div class="item-body">
+            <div class="item-title">${it.title}</div>
+            <div class="item-sub">${it.sub}</div>
+          </div>
+          <div class="item-right">
+            <span class="agency-pill" style="background:${sg.agBg};color:${sg.agTx}">${it.agency}</span>
+            ${it.date ? `<span style="font-size:0.68rem;font-family:'DM Mono',monospace;color:var(--text3)">${it.date}</span>` : ''}
+            <span class="item-status badge-${it.status}">${SL[it.status]}</span>
+          </div>
+        </div>
+        <div class="item-edit ${isEditOpen?'open':''}" id="ie-${key}">
+          <select class="edit-sel" id="is-${key}" onchange="updateItem('${key}','status',this.value)">
+            <option value="not-started" ${it.status==='not-started'?'selected':''}>Not Started</option>
+            <option value="pending" ${it.status==='pending'?'selected':''}>In Progress</option>
+            <option value="approved" ${it.status==='approved'?'selected':''}>Approved</option>
+            <option value="rejected" ${it.status==='rejected'?'selected':''}>Rejected</option>
+          </select>
+          <input class="edit-date" type="date" id="id-${key}" value="${it.date||''}" onchange="updateItem('${key}','date',this.value)">
+          <input class="edit-notes" placeholder="Notes…" id="in-${key}" value="${it.notes||''}" onchange="updateItem('${key}','notes',this.value)">
+          <button class="btn-done" onclick="closeItem(event,'${key}')">Done</button>
+        </div>
+      `;
+    }).join('');
 
-  const stagesHtml = p.stages.map((s, i) => `
-    <div class="stage-card" onclick="toggleStageEdit(${i})">
-      <div class="stage-num num-${s.status}">${i + 1}</div>
-      <div class="stage-info">
-        <div class="stage-name">${s.name}</div>
-        ${s.desc ? `<div class="stage-desc">${s.desc}</div>` : ''}
+    return `
+      <div class="stage-group">
+        <div class="stage-header" style="border-color:${sg.color};background:${isOpen?sg.bg:'white'}" onclick="toggleStage(${si})">
+          <div style="width:10px;height:10px;border-radius:50%;background:${sg.color};flex-shrink:0"></div>
+          <div class="stage-label" style="color:${sg.tx}">${sg.label}</div>
+          <div class="stage-progress">${stageProg(sg)}</div>
+          <div class="stage-chevron ${isOpen?'open':''}">▶</div>
+        </div>
+        <div class="stage-items ${isOpen?'open':''}">${itemsHtml}</div>
       </div>
-      <div class="stage-right">
-        <div class="stage-date">${s.date || '—'}</div>
-        <div class="stage-status status-${s.status}">${statusLabel(s.status)}</div>
-      </div>
-    </div>
-    <div class="stage-edit ${openStage === i ? 'open' : ''}" id="stageEdit${i}">
-      <select class="edit-select" id="stageStatus${i}" onchange="updateStage(${i})">
-        <option value="not-started" ${s.status==='not-started'?'selected':''}>Not Started</option>
-        <option value="pending" ${s.status==='pending'?'selected':''}>In Progress</option>
-        <option value="approved" ${s.status==='approved'?'selected':''}>Approved</option>
-        <option value="rejected" ${s.status==='rejected'?'selected':''}>Rejected</option>
-      </select>
-      <input class="edit-date" type="date" id="stageDate${i}" value="${s.date || ''}" onchange="updateStageDate(${i})">
-      <button class="btn-save-stage" onclick="closeStageEdit(event)">Done</button>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   main.innerHTML = `
-    <div class="project-header">
+    <div class="project-bar">
       <div>
         <div class="project-title">${p.name}</div>
         <div class="project-meta">
-          ${p.region ? `<div class="meta-item"><div class="meta-dot"></div>${p.region}</div>` : ''}
-          ${p.operator ? `<div class="meta-item"><div class="meta-dot"></div>${p.operator}</div>` : ''}
-          ${p.commodity ? `<div class="meta-item"><div class="meta-dot"></div>${p.commodity}</div>` : ''}
-          <div class="meta-item"><div class="meta-dot"></div>Started ${p.created}</div>
+          ${p.region?`<span class="meta-chip">${p.region}</span>`:''}
+          ${p.operator?`<span class="meta-chip">${p.operator}</span>`:''}
+          ${p.commodity?`<span class="meta-chip">${p.commodity}</span>`:''}
+          <span class="meta-chip">${p.created}</span>
         </div>
       </div>
-      <div style="display:flex;gap:0.5rem;align-items:center">
-        <div class="overall-badge badge-${p.status}">${statusLabel(p.status)}</div>
-        <button onclick="editProject(${p.id})" style="background:var(--bg);border:1px solid var(--border2);padding:5px 12px;border-radius:6px;font-size:0.8rem;cursor:pointer;color:var(--text2)">Edit</button>
-        <button onclick="deleteProject(${p.id})" style="background:var(--rejected-bg);border:1px solid var(--rejected);padding:5px 12px;border-radius:6px;font-size:0.8rem;cursor:pointer;color:var(--rejected)">Delete</button>
-      </div>
-    </div>
-
-    <div class="progress-summary">
-      <div class="progress-bar-wrap">
-        <div class="progress-label">
-          <span>APPROVAL PROGRESS</span>
-          <span>${prog}%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${prog}%"></div>
-        </div>
-      </div>
-      <div class="progress-stats">
-        <div class="pstat">
-          <div class="pstat-num" style="color:var(--approved)">${approved}</div>
-          <div class="pstat-label">CLEARED</div>
-        </div>
-        <div class="pstat">
-          <div class="pstat-num" style="color:var(--pending)">${p.stages.filter(s=>s.status==='pending').length}</div>
-          <div class="pstat-label">PENDING</div>
-        </div>
-        <div class="pstat">
-          <div class="pstat-num">${total - approved - p.stages.filter(s=>s.status==='pending').length - p.stages.filter(s=>s.status==='rejected').length}</div>
-          <div class="pstat-label">REMAINING</div>
-        </div>
-        <div class="pstat">
-          <div class="pstat-num">${total}</div>
-          <div class="pstat-label">TOTAL</div>
-        </div>
+      <div class="bar-right">
+        <span class="overall-badge badge-${p.status}">${SL[p.status]}</span>
+        <button class="btn-sm" onclick="editProject(${p.id})">Edit</button>
+        <button class="btn-sm-red" onclick="deleteProject(${p.id})">Delete</button>
       </div>
     </div>
-
-    <div class="pathway">${stagesHtml}</div>
+    <div class="prog-card">
+      <div class="prog-wrap">
+        <div class="prog-labels"><span>OVERALL APPROVAL PROGRESS</span><span>${pct}%</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="prog-stats">
+        <div class="pstat"><div class="pstat-num" style="color:#2c6e49">${done}</div><div class="pstat-lbl">CLEARED</div></div>
+        <div class="pstat"><div class="pstat-num" style="color:#b5640a">${pending}</div><div class="pstat-lbl">PENDING</div></div>
+        <div class="pstat"><div class="pstat-num">${remaining}</div><div class="pstat-lbl">REMAINING</div></div>
+        <div class="pstat"><div class="pstat-num">${total}</div><div class="pstat-lbl">TOTAL</div></div>
+      </div>
+    </div>
+    ${stagesHtml}
   `;
 }
 
-function toggleStageEdit(i) {
-  openStage = openStage === i ? null : i;
-  renderProject();
+function toggleStage(si) {
+  if (openStages.has(si)) openStages.delete(si); else openStages.add(si);
+  render();
 }
 
-function closeStageEdit(e) {
+function toggleItem(key) {
+  if (openItems.has(key)) openItems.delete(key); else openItems.add(key);
+  render();
+}
+
+function closeItem(e, key) {
   e.stopPropagation();
-  openStage = null;
-  renderProject();
+  openItems.delete(key);
+  render();
 }
 
-function updateStage(i) {
-  const p = projects.find(x => x.id === currentProjectId);
-  p.stages[i].status = document.getElementById(`stageStatus${i}`).value;
+function updateItem(key, field, val) {
+  const [si, ii] = key.split('-').map(Number);
+  const p = projects.find(x => x.id === currentId);
+  p.stages[si].items[ii][field] = val;
   save();
-  renderProject();
-}
-
-function updateStageDate(i) {
-  const p = projects.find(x => x.id === currentProjectId);
-  p.stages[i].date = document.getElementById(`stageDate${i}`).value;
-  save();
+  if (field !== 'notes') render();
 }
 
 function openModal(project) {
-  editingId = project ? project.id : null;
+  editingId = project?.id || null;
   document.getElementById('modalTitle').textContent = project ? 'Edit Project' : 'Add New Project';
   document.getElementById('fName').value = project?.name || '';
   document.getElementById('fRegion').value = project?.region || '';
   document.getElementById('fOperator').value = project?.operator || '';
   document.getElementById('fCommodity').value = project?.commodity || '';
   document.getElementById('fStatus').value = project?.status || 'not-started';
-
-  const list = document.getElementById('stagesList');
-  list.innerHTML = '';
-  const stages = project?.stages || DEFAULT_STAGES.map(s => ({ ...s, status: 'not-started', date: '' }));
-  stages.forEach(s => addStageRow(s));
-
   document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -828,77 +496,48 @@ function closeModal() {
   editingId = null;
 }
 
-function addStageRow(stage) {
-  const list = document.getElementById('stagesList');
-  const div = document.createElement('div');
-  div.className = 'stage-item';
-  div.innerHTML = `
-    <input style="flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;font-family:inherit" 
-      placeholder="Stage name" value="${stage?.name || ''}">
-    <select class="edit-select" style="width:120px">
-      <option value="not-started" ${stage?.status==='not-started'?'selected':''}>Not Started</option>
-      <option value="pending" ${stage?.status==='pending'?'selected':''}>In Progress</option>
-      <option value="approved" ${stage?.status==='approved'?'selected':''}>Approved</option>
-      <option value="rejected" ${stage?.status==='rejected'?'selected':''}>Rejected</option>
-    </select>
-    <button onclick="this.parentElement.remove()" style="background:var(--rejected-bg);border:none;color:var(--rejected);width:26px;height:26px;border-radius:4px;cursor:pointer;font-size:0.9rem">✕</button>
-  `;
-  list.appendChild(div);
-}
-
 function saveProject() {
   const name = document.getElementById('fName').value.trim();
-  if (!name) { alert('Project name is required'); return; }
-
-  const stages = [...document.querySelectorAll('#stagesList .stage-item')].map(row => {
-    const inputs = row.querySelectorAll('input, select');
-    return { name: inputs[0].value.trim(), status: inputs[1].value, date: '', desc: '' };
-  }).filter(s => s.name);
-
+  if (!name) { alert('Project name required'); return; }
   const data = {
     name,
     region: document.getElementById('fRegion').value.trim(),
     operator: document.getElementById('fOperator').value.trim(),
     commodity: document.getElementById('fCommodity').value.trim(),
     status: document.getElementById('fStatus').value,
-    stages
   };
-
   if (editingId) {
     const idx = projects.findIndex(p => p.id === editingId);
     projects[idx] = { ...projects[idx], ...data };
   } else {
     const newId = Date.now();
-    projects.push({ id: newId, created: new Date().toISOString().split('T')[0], ...data });
-    currentProjectId = newId;
+    projects.push({ id: newId, created: new Date().toISOString().split('T')[0], stages: makeStages(), ...data });
+    currentId = newId;
   }
-
   save();
   closeModal();
   renderSelector();
-  renderProject();
+  render();
 }
 
-function editProject(id) {
-  const p = projects.find(x => x.id === id);
-  if (p) openModal(p);
-}
+function editProject(id) { openModal(projects.find(p => p.id === id)); }
 
 function deleteProject(id) {
-  if (!confirm('Delete this project? This cannot be undone.')) return;
+  if (!confirm('Delete this project?')) return;
   projects = projects.filter(p => p.id !== id);
-  currentProjectId = projects.length ? projects[0].id : null;
+  currentId = projects[0]?.id || null;
   save();
   renderSelector();
-  renderProject();
+  render();
 }
 
 // Init
 renderSelector();
-if (projects.length > 0) {
-  currentProjectId = projects[0].id;
-  document.getElementById('projectSelector').value = currentProjectId;
-  renderProject();
+if (projects.length) {
+  currentId = projects[0].id;
+  document.getElementById('projectSelector').value = currentId;
+  openStages.add(0);
+  render();
 }
 </script>
 </body>
