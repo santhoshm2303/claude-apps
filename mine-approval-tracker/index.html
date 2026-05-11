@@ -4,345 +4,371 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WA Open Pit Mine — Approval Pathway Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ore: #C8873A;
-  --ore-light: #E8A55A;
-  --earth: #2A1F14;
-  --earth-mid: #3D2E1E;
-  --earth-light: #5A4535;
-  --dust: #B8A898;
-  --dust-light: #D4C8B8;
-  --sky: #7BA8C4;
-  --approved: #4CAF7D;
-  --pending: #E8B84B;
-  --not-started: #6B7280;
-  --rejected: #E05A5A;
-  --bg: #1A1208;
-  --surface: #221A0E;
-  --surface2: #2E2210;
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --border: #e2e0d8;
+  --border2: #ccc9be;
+  --text: #1a1a18;
+  --text2: #5a5a52;
+  --text3: #9a9a90;
+  --accent: #2c6e49;
+  --accent2: #40916c;
+  --approved: #2c6e49;
+  --approved-bg: #d8f3dc;
+  --pending: #b5640a;
+  --pending-bg: #fef3e2;
+  --not-started: #6b7280;
+  --not-started-bg: #f3f4f6;
+  --rejected: #b91c1c;
+  --rejected-bg: #fee2e2;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: var(--bg);
-  color: var(--dust-light);
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-weight: 300;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-/* Texture overlay */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 1000;
-  opacity: 0.4;
-}
-
+/* Header */
 header {
-  background: var(--earth);
-  border-bottom: 2px solid var(--ore);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   padding: 0 2rem;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 70px;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: var(--shadow);
 }
 
 .logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem;
-  letter-spacing: 0.12em;
-  color: var(--ore);
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.logo span {
-  color: var(--dust);
-  font-size: 0.75rem;
-  display: block;
-  font-family: 'IBM Plex Mono', monospace;
-  letter-spacing: 0.2em;
-  margin-top: 2px;
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 16px;
+}
+
+.logo-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+  margin-top: 1px;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
-.header-badge {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  color: var(--dust);
-  background: var(--earth-mid);
-  padding: 4px 10px;
-  border: 1px solid var(--earth-light);
-  letter-spacing: 0.1em;
+/* Project selector dropdown */
+.project-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+  min-width: 200px;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a5a52' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
 }
 
 .btn-add {
-  background: var(--ore);
-  color: var(--earth);
+  background: var(--accent);
+  color: white;
   border: none;
-  padding: 8px 18px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
   cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-add:hover { background: var(--ore-light); }
-
-main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
-
-/* Stats bar */
-.stats-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--earth-light);
-  border: 1px solid var(--earth-light);
-  margin-bottom: 2rem;
-  animation: fadeUp 0.5s ease both;
-}
-
-.stat {
-  background: var(--surface);
-  padding: 1.2rem 1.5rem;
-  text-align: center;
-}
-
-.stat-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.5rem;
-  line-height: 1;
-  color: var(--ore);
-}
-
-.stat-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  color: var(--dust);
-  margin-top: 4px;
-  text-transform: uppercase;
-}
-
-/* Filter row */
-.filter-row {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.btn-add:hover { background: var(--accent2); }
+
+/* Main layout */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Project header card */
+.project-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
   margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  animation: fadeUp 0.5s 0.1s ease both;
-}
-
-.filter-btn {
-  background: var(--surface);
-  border: 1px solid var(--earth-light);
-  color: var(--dust);
-  padding: 6px 14px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.filter-btn:hover, .filter-btn.active {
-  background: var(--ore);
-  color: var(--earth);
-  border-color: var(--ore);
-}
-
-/* Project grid */
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 1.5rem;
-  animation: fadeUp 0.5s 0.2s ease both;
-}
-
-.project-card {
-  background: var(--surface);
-  border: 1px solid var(--earth-light);
-  border-top: 3px solid var(--ore);
-  transition: transform 0.2s, border-color 0.2s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.project-card::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 60px; height: 60px;
-  background: linear-gradient(135deg, transparent 50%, rgba(200,135,58,0.05) 50%);
-}
-
-.project-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--ore);
-}
-
-.card-header {
-  padding: 1.2rem 1.5rem 1rem;
-  border-bottom: 1px solid var(--earth-mid);
+  box-shadow: var(--shadow);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
 }
 
-.project-name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.2rem;
-  letter-spacing: 0.08em;
-  color: var(--dust-light);
-  line-height: 1.2;
+.project-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
-.project-region {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--dust);
-  margin-top: 3px;
-  letter-spacing: 0.1em;
+.project-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.status-badge {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: var(--text2);
+  font-family: 'DM Mono', monospace;
+}
+
+.meta-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border2);
+}
+
+.overall-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
   font-weight: 500;
-  padding: 3px 8px;
-  letter-spacing: 0.1em;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.03em;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-.status-approved { background: rgba(76,175,125,0.15); color: var(--approved); border: 1px solid rgba(76,175,125,0.3); }
-.status-pending { background: rgba(232,184,75,0.15); color: var(--pending); border: 1px solid rgba(232,184,75,0.3); }
-.status-not-started { background: rgba(107,114,128,0.15); color: var(--not-started); border: 1px solid rgba(107,114,128,0.3); }
-.status-rejected { background: rgba(224,90,90,0.15); color: var(--rejected); border: 1px solid rgba(224,90,90,0.3); }
+/* Progress summary */
+.progress-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
 
-/* Progress bar */
-.card-progress { padding: 1rem 1.5rem; }
+.progress-bar-wrap {
+  flex: 1;
+}
 
 .progress-label {
   display: flex;
   justify-content: space-between;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--dust);
-  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  color: var(--text2);
   margin-bottom: 6px;
+  font-family: 'DM Mono', monospace;
 }
 
 .progress-track {
-  height: 4px;
-  background: var(--earth-mid);
-  position: relative;
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--ore), var(--ore-light));
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 99px;
   transition: width 0.6s ease;
 }
 
-/* Approval stages */
-.stages { padding: 0 1.5rem 1.5rem; }
-
-.stage-row {
+.progress-stats {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.stage-row:last-child { border-bottom: none; }
-
-.stage-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
+  gap: 2rem;
   flex-shrink: 0;
 }
-.dot-approved { background: var(--approved); }
-.dot-pending { background: var(--pending); box-shadow: 0 0 6px rgba(232,184,75,0.5); }
-.dot-not-started { background: var(--earth-light); }
-.dot-rejected { background: var(--rejected); }
+
+.pstat {
+  text-align: center;
+}
+
+.pstat-num {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.pstat-label {
+  font-size: 0.7rem;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  margin-top: 2px;
+}
+
+/* Pathway flowchart */
+.pathway {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.stage-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  transition: box-shadow 0.15s;
+  cursor: pointer;
+}
+
+.stage-card:first-child { border-radius: 12px 12px 0 0; }
+.stage-card:last-child { border-radius: 0 0 12px 12px; }
+.stage-card:not(:last-child) { border-bottom: none; }
+.stage-card:hover { z-index: 1; box-shadow: var(--shadow-md); }
+
+/* Connector line */
+.stage-card:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 2.75rem;
+  bottom: -12px;
+  width: 2px;
+  height: 12px;
+  background: var(--border2);
+  z-index: 2;
+}
+
+.stage-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  flex-shrink: 0;
+  border: 2px solid;
+}
+
+.num-approved { background: var(--approved-bg); color: var(--approved); border-color: var(--approved); }
+.num-pending { background: var(--pending-bg); color: var(--pending); border-color: var(--pending); }
+.num-not-started { background: var(--not-started-bg); color: var(--not-started); border-color: var(--border2); }
+.num-rejected { background: var(--rejected-bg); color: var(--rejected); border-color: var(--rejected); }
+
+.stage-info { flex: 1; }
 
 .stage-name {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.stage-desc {
   font-size: 0.75rem;
-  color: var(--dust);
-  flex: 1;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+.stage-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
 }
 
 .stage-date {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.62rem;
-  color: var(--earth-light);
-  letter-spacing: 0.05em;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text3);
 }
 
-/* Card footer */
-.card-footer {
-  padding: 0.75rem 1.5rem;
-  background: var(--earth);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.stage-status {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: 'DM Mono', monospace;
+  white-space: nowrap;
 }
 
-.card-meta {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.62rem;
-  color: var(--earth-light);
-  letter-spacing: 0.08em;
-}
+.status-approved { background: var(--approved-bg); color: var(--approved); }
+.status-pending { background: var(--pending-bg); color: var(--pending); }
+.status-not-started { background: var(--not-started-bg); color: var(--not-started); }
+.status-rejected { background: var(--rejected-bg); color: var(--rejected); }
 
-.card-actions { display: flex; gap: 0.5rem; }
-
-.btn-icon {
-  background: transparent;
-  border: 1px solid var(--earth-light);
-  color: var(--dust);
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  font-size: 0.75rem;
-  transition: all 0.2s;
-}
-.btn-icon:hover { border-color: var(--ore); color: var(--ore); }
+/* Stage edit inline */
+.stage-edit { display: none; padding: 0.75rem 1.5rem 0.75rem 4.5rem; background: #f9f9f7; border-top: 1px solid var(--border); }
+.stage-edit.open { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.edit-select { padding: 5px 10px; border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; background: white; color: var(--text); outline: none; }
+.edit-date { padding: 5px 10px; border: 1px solid var(--border2); border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text); outline: none; }
+.btn-save-stage { background: var(--accent); color: white; border: none; padding: 5px 14px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
 
 /* Empty state */
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  color: var(--earth-light);
-  grid-column: 1 / -1;
+  color: var(--text3);
 }
-.empty-state svg { opacity: 0.3; margin-bottom: 1rem; }
-.empty-state p { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; }
+.empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state h3 { font-size: 1rem; font-weight: 500; color: var(--text2); margin-bottom: 0.5rem; }
+.empty-state p { font-size: 0.85rem; }
 
 /* Modal */
 .modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
   z-index: 500;
   display: none;
   align-items: center;
@@ -353,130 +379,151 @@ main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
 
 .modal {
   background: var(--surface);
-  border: 1px solid var(--ore);
+  border-radius: 16px;
   width: 100%;
-  max-width: 580px;
+  max-width: 560px;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
   animation: modalIn 0.2s ease;
 }
 
 @keyframes modalIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-header {
-  background: var(--earth);
-  padding: 1.2rem 1.5rem;
-  border-bottom: 1px solid var(--ore);
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .modal-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
-  color: var(--ore);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .modal-close {
-  background: transparent;
-  border: 1px solid var(--earth-light);
-  color: var(--dust);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text2);
   width: 30px; height: 30px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
-  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
 }
-.modal-close:hover { border-color: var(--ore); color: var(--ore); }
 
 .modal-body { padding: 1.5rem; }
 
-.form-group { margin-bottom: 1.2rem; }
+.form-group { margin-bottom: 1rem; }
 
 .form-label {
   display: block;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  color: var(--dust);
-  margin-bottom: 6px;
-  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 5px;
 }
 
 .form-input, .form-select {
   width: 100%;
-  background: var(--earth);
-  border: 1px solid var(--earth-light);
-  color: var(--dust-light);
   padding: 8px 12px;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.85rem;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text);
+  background: var(--surface);
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.15s;
 }
-.form-input:focus, .form-select:focus { border-color: var(--ore); }
-.form-select option { background: var(--earth); }
+.form-input:focus, .form-select:focus { border-color: var(--accent2); }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-.stages-editor { margin-top: 0.5rem; }
+.stages-list { margin-top: 0.5rem; }
 
-.stage-edit-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+.stage-item {
+  display: flex;
   align-items: center;
+  gap: 0.5rem;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
 }
+.stage-item:last-child { border-bottom: none; }
+
+.stage-item-name {
+  flex: 1;
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+.btn-add-stage {
+  background: transparent;
+  border: 1px dashed var(--border2);
+  color: var(--text2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+  transition: all 0.15s;
+}
+.btn-add-stage:hover { border-color: var(--accent); color: var(--accent); }
 
 .modal-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid var(--earth-light);
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
 }
 
 .btn-cancel {
-  background: transparent;
-  border: 1px solid var(--earth-light);
-  color: var(--dust);
-  padding: 8px 20px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.2s;
 }
-.btn-cancel:hover { border-color: var(--dust); }
 
-.btn-save {
-  background: var(--ore);
+.btn-primary {
+  background: var(--accent);
   border: none;
-  color: var(--earth);
-  padding: 8px 20px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.15s;
 }
-.btn-save:hover { background: var(--ore-light); }
+.btn-primary:hover { background: var(--accent2); }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.badge-approved { background: var(--approved-bg); color: var(--approved); }
+.badge-pending { background: var(--pending-bg); color: var(--pending); }
+.badge-not-started { background: var(--not-started-bg); color: var(--not-started); }
+.badge-rejected { background: var(--rejected-bg); color: var(--rejected); }
 
 @media (max-width: 600px) {
-  .stats-bar { grid-template-columns: repeat(2, 1fr); }
-  .projects-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  header { padding: 0 1rem; }
   main { padding: 1rem; }
+  header { padding: 0 1rem; }
+  .project-header { flex-direction: column; }
+  .progress-summary { flex-direction: column; gap: 1rem; }
+  .progress-stats { justify-content: space-around; width: 100%; }
+  .form-row { grid-template-columns: 1fr; }
+  .header-right { gap: 0.5rem; }
+  .project-selector { min-width: 140px; font-size: 0.78rem; }
 }
 </style>
 </head>
@@ -484,58 +531,40 @@ main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
 
 <header>
   <div class="logo">
-    Mine Tracker
-    <span>WA OPEN PIT APPROVAL PATHWAY</span>
+    <div class="logo-icon">⛏</div>
+    <div>
+      <div class="logo-text">Mine Approval Tracker</div>
+      <div class="logo-sub">WA OPEN PIT PATHWAY</div>
+    </div>
   </div>
   <div class="header-right">
-    <div class="header-badge" id="lastUpdated">UPDATED —</div>
-    <button class="btn-add" onclick="openModal()">+ ADD PROJECT</button>
+    <select class="project-selector" id="projectSelector" onchange="selectProject(this.value)">
+      <option value="">— Select Project —</option>
+    </select>
+    <button class="btn-add" onclick="openModal()">+ Add Project</button>
   </div>
 </header>
 
-<main>
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-num" id="statTotal">0</div>
-      <div class="stat-label">Total Projects</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="statApproved" style="color:var(--approved)">0</div>
-      <div class="stat-label">Fully Approved</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="statInProgress" style="color:var(--pending)">0</div>
-      <div class="stat-label">In Progress</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="statStages">0</div>
-      <div class="stat-label">Stages Cleared</div>
-    </div>
+<main id="mainContent">
+  <div class="empty-state" id="emptyState">
+    <div class="icon">🏗️</div>
+    <h3>No project selected</h3>
+    <p>Select a project from the dropdown or add a new one to get started.</p>
   </div>
-
-  <div class="filter-row">
-    <button class="filter-btn active" onclick="setFilter('all', this)">ALL</button>
-    <button class="filter-btn" onclick="setFilter('pending', this)">IN PROGRESS</button>
-    <button class="filter-btn" onclick="setFilter('approved', this)">APPROVED</button>
-    <button class="filter-btn" onclick="setFilter('not-started', this)">NOT STARTED</button>
-    <button class="filter-btn" onclick="setFilter('rejected', this)">REJECTED</button>
-  </div>
-
-  <div class="projects-grid" id="projectsGrid"></div>
 </main>
 
 <!-- Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title" id="modalTitle">NEW PROJECT</div>
+      <div class="modal-title" id="modalTitle">Add New Project</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Project Name</label>
-          <input class="form-input" id="fName" placeholder="e.g. Pilbara Iron Extension">
+          <label class="form-label">Project Name *</label>
+          <input class="form-input" id="fName" placeholder="e.g. Pilbara Iron Ore Extension">
         </div>
         <div class="form-group">
           <label class="form-label">Region</label>
@@ -544,8 +573,8 @@ main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Operator</label>
-          <input class="form-input" id="fOperator" placeholder="Company name">
+          <label class="form-label">Operator / Company</label>
+          <input class="form-input" id="fOperator" placeholder="e.g. Fortescue Ltd">
         </div>
         <div class="form-group">
           <label class="form-label">Commodity</label>
@@ -563,142 +592,164 @@ main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
       </div>
       <div class="form-group">
         <label class="form-label">Approval Stages</label>
-        <div class="stages-editor" id="stagesEditor"></div>
-        <button class="btn-cancel" style="margin-top:0.5rem;font-size:0.65rem" onclick="addStageField()">+ ADD STAGE</button>
+        <div class="stages-list" id="stagesList"></div>
+        <button class="btn-add-stage" onclick="addStageRow()">+ Add Stage</button>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
-      <button class="btn-save" onclick="saveProject()">SAVE PROJECT</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProject()">Save Project</button>
     </div>
   </div>
 </div>
 
 <script>
 const DEFAULT_STAGES = [
-  'Native Title Clearance',
-  'Environmental Impact Assessment',
-  'Mining Proposal (DMIRS)',
-  'Works Approval (EPA)',
-  'Water Licence (DoW)',
-  'Heritage Survey',
-  'Mine Closure Plan',
-  'State Agreement / MOU'
+  { name: 'Native Title Clearance', desc: 'NNTT / Federal Court clearance' },
+  { name: 'Environmental Impact Assessment', desc: 'EPA referral and assessment' },
+  { name: 'Mining Proposal (DMIRS)', desc: 'Department of Mines approval' },
+  { name: 'Works Approval (EPA)', desc: 'Premises and works licence' },
+  { name: 'Water Licence (DoW)', desc: 'Department of Water licence' },
+  { name: 'Heritage Survey', desc: 'Aboriginal heritage clearance' },
+  { name: 'Mine Closure Plan', desc: 'DMP approved closure plan' },
+  { name: 'State Agreement / MOU', desc: 'State Agreement execution' },
 ];
 
-let projects = JSON.parse(localStorage.getItem('wa-mine-tracker') || '[]');
+let projects = JSON.parse(localStorage.getItem('wa-mine-tracker-v2') || '[]');
+let currentProjectId = null;
 let editingId = null;
-let currentFilter = 'all';
+let openStage = null;
 
+// Seed demo data
 if (projects.length === 0) {
   projects = [
     {
-      id: 1,
-      name: 'Pilbara Iron Ore Extension',
-      region: 'Pilbara, WA',
-      operator: 'Fortescue Ltd',
-      commodity: 'Iron Ore',
-      status: 'pending',
+      id: 1, name: 'Pilbara Iron Ore Extension', region: 'Pilbara, WA',
+      operator: 'Fortescue Ltd', commodity: 'Iron Ore', status: 'pending',
       created: '2025-08-01',
       stages: [
-        { name: 'Native Title Clearance', status: 'approved', date: '2025-09-14' },
-        { name: 'Environmental Impact Assessment', status: 'approved', date: '2025-11-02' },
-        { name: 'Mining Proposal (DMIRS)', status: 'pending', date: '' },
-        { name: 'Works Approval (EPA)', status: 'not-started', date: '' },
-        { name: 'Water Licence (DoW)', status: 'not-started', date: '' },
-        { name: 'Heritage Survey', status: 'approved', date: '2025-10-08' },
-        { name: 'Mine Closure Plan', status: 'not-started', date: '' },
+        { name: 'Native Title Clearance', desc: 'NNTT / Federal Court clearance', status: 'approved', date: '2025-09-14' },
+        { name: 'Environmental Impact Assessment', desc: 'EPA referral and assessment', status: 'approved', date: '2025-11-02' },
+        { name: 'Mining Proposal (DMIRS)', desc: 'Department of Mines approval', status: 'pending', date: '' },
+        { name: 'Works Approval (EPA)', desc: 'Premises and works licence', status: 'not-started', date: '' },
+        { name: 'Water Licence (DoW)', desc: 'Department of Water licence', status: 'not-started', date: '' },
+        { name: 'Heritage Survey', desc: 'Aboriginal heritage clearance', status: 'approved', date: '2025-10-08' },
+        { name: 'Mine Closure Plan', desc: 'DMP approved closure plan', status: 'not-started', date: '' },
       ]
     },
     {
-      id: 2,
-      name: 'Goldfields Deep Pit Stage 2',
-      region: 'Kalgoorlie, WA',
-      operator: 'Northern Star Resources',
-      commodity: 'Gold',
-      status: 'approved',
+      id: 2, name: 'Goldfields Deep Pit Stage 2', region: 'Kalgoorlie, WA',
+      operator: 'Northern Star Resources', commodity: 'Gold', status: 'approved',
       created: '2024-03-15',
       stages: [
-        { name: 'Native Title Clearance', status: 'approved', date: '2024-04-20' },
-        { name: 'Environmental Impact Assessment', status: 'approved', date: '2024-07-11' },
-        { name: 'Mining Proposal (DMIRS)', status: 'approved', date: '2024-09-03' },
-        { name: 'Works Approval (EPA)', status: 'approved', date: '2024-10-28' },
-        { name: 'Water Licence (DoW)', status: 'approved', date: '2024-12-15' },
-        { name: 'Heritage Survey', status: 'approved', date: '2024-05-30' },
-        { name: 'Mine Closure Plan', status: 'approved', date: '2025-01-20' },
+        { name: 'Native Title Clearance', desc: 'NNTT / Federal Court clearance', status: 'approved', date: '2024-04-20' },
+        { name: 'Environmental Impact Assessment', desc: 'EPA referral and assessment', status: 'approved', date: '2024-07-11' },
+        { name: 'Mining Proposal (DMIRS)', desc: 'Department of Mines approval', status: 'approved', date: '2024-09-03' },
+        { name: 'Works Approval (EPA)', desc: 'Premises and works licence', status: 'approved', date: '2024-10-28' },
+        { name: 'Water Licence (DoW)', desc: 'Department of Water licence', status: 'approved', date: '2024-12-15' },
+        { name: 'Heritage Survey', desc: 'Aboriginal heritage clearance', status: 'approved', date: '2024-05-30' },
+        { name: 'Mine Closure Plan', desc: 'DMP approved closure plan', status: 'approved', date: '2025-01-20' },
       ]
     },
-    {
-      id: 3,
-      name: 'Kimberley Bauxite Project',
-      region: 'Kimberley, WA',
-      operator: 'Rio Tinto WA',
-      commodity: 'Bauxite',
-      status: 'not-started',
-      created: '2026-02-10',
-      stages: [
-        { name: 'Native Title Clearance', status: 'not-started', date: '' },
-        { name: 'Environmental Impact Assessment', status: 'not-started', date: '' },
-        { name: 'Mining Proposal (DMIRS)', status: 'not-started', date: '' },
-        { name: 'Works Approval (EPA)', status: 'not-started', date: '' },
-        { name: 'Water Licence (DoW)', status: 'not-started', date: '' },
-      ]
-    }
   ];
   save();
 }
 
 function save() {
-  localStorage.setItem('wa-mine-tracker', JSON.stringify(projects));
-  render();
+  localStorage.setItem('wa-mine-tracker-v2', JSON.stringify(projects));
 }
 
-function getStatusLabel(s) {
-  return { approved: 'APPROVED', pending: 'IN PROGRESS', 'not-started': 'NOT STARTED', rejected: 'REJECTED' }[s] || s;
+function statusLabel(s) {
+  return { approved: 'Approved', pending: 'In Progress', 'not-started': 'Not Started', rejected: 'Rejected' }[s] || s;
 }
 
 function calcProgress(stages) {
   if (!stages.length) return 0;
-  const done = stages.filter(s => s.status === 'approved').length;
-  return Math.round((done / stages.length) * 100);
+  return Math.round(stages.filter(s => s.status === 'approved').length / stages.length * 100);
 }
 
-function render() {
-  const grid = document.getElementById('projectsGrid');
-  const filtered = currentFilter === 'all' ? projects : projects.filter(p => p.status === currentFilter);
+function renderSelector() {
+  const sel = document.getElementById('projectSelector');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— Select Project —</option>';
+  projects.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name;
+    if (p.id == currentProjectId) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
 
-  // Stats
-  document.getElementById('statTotal').textContent = projects.length;
-  document.getElementById('statApproved').textContent = projects.filter(p => p.status === 'approved').length;
-  document.getElementById('statInProgress').textContent = projects.filter(p => p.status === 'pending').length;
-  const totalStages = projects.reduce((a, p) => a + p.stages.filter(s => s.status === 'approved').length, 0);
-  document.getElementById('statStages').textContent = totalStages;
-  document.getElementById('lastUpdated').textContent = 'UPDATED ' + new Date().toLocaleDateString('en-AU', {day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+function selectProject(id) {
+  currentProjectId = id ? parseInt(id) : null;
+  renderProject();
+}
 
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><p>NO PROJECTS FOUND</p></div>`;
+function renderProject() {
+  const main = document.getElementById('mainContent');
+  const empty = document.getElementById('emptyState');
+
+  if (!currentProjectId) {
+    main.innerHTML = `<div class="empty-state" id="emptyState">
+      <div class="icon">🏗️</div>
+      <h3>No project selected</h3>
+      <p>Select a project from the dropdown or add a new one to get started.</p>
+    </div>`;
     return;
   }
 
-  grid.innerHTML = filtered.map(p => {
-    const prog = calcProgress(p.stages);
-    const stagesHtml = p.stages.map(s => `
-      <div class="stage-row">
-        <div class="stage-dot dot-${s.status}"></div>
-        <div class="stage-name">${s.name}</div>
-        <div class="stage-date">${s.date || '—'}</div>
-      </div>`).join('');
+  const p = projects.find(x => x.id === currentProjectId);
+  if (!p) return;
 
-    return `
-    <div class="project-card" onclick="editProject(${p.id})">
-      <div class="card-header">
-        <div>
-          <div class="project-name">${p.name}</div>
-          <div class="project-region">${p.region} · ${p.commodity}</div>
-        </div>
-        <div class="status-badge status-${p.status}">${getStatusLabel(p.status)}</div>
+  const prog = calcProgress(p.stages);
+  const approved = p.stages.filter(s => s.status === 'approved').length;
+  const total = p.stages.length;
+
+  const stagesHtml = p.stages.map((s, i) => `
+    <div class="stage-card" onclick="toggleStageEdit(${i})">
+      <div class="stage-num num-${s.status}">${i + 1}</div>
+      <div class="stage-info">
+        <div class="stage-name">${s.name}</div>
+        ${s.desc ? `<div class="stage-desc">${s.desc}</div>` : ''}
       </div>
-      <div class="card-progress">
+      <div class="stage-right">
+        <div class="stage-date">${s.date || '—'}</div>
+        <div class="stage-status status-${s.status}">${statusLabel(s.status)}</div>
+      </div>
+    </div>
+    <div class="stage-edit ${openStage === i ? 'open' : ''}" id="stageEdit${i}">
+      <select class="edit-select" id="stageStatus${i}" onchange="updateStage(${i})">
+        <option value="not-started" ${s.status==='not-started'?'selected':''}>Not Started</option>
+        <option value="pending" ${s.status==='pending'?'selected':''}>In Progress</option>
+        <option value="approved" ${s.status==='approved'?'selected':''}>Approved</option>
+        <option value="rejected" ${s.status==='rejected'?'selected':''}>Rejected</option>
+      </select>
+      <input class="edit-date" type="date" id="stageDate${i}" value="${s.date || ''}" onchange="updateStageDate(${i})">
+      <button class="btn-save-stage" onclick="closeStageEdit(event)">Done</button>
+    </div>
+  `).join('');
+
+  main.innerHTML = `
+    <div class="project-header">
+      <div>
+        <div class="project-title">${p.name}</div>
+        <div class="project-meta">
+          ${p.region ? `<div class="meta-item"><div class="meta-dot"></div>${p.region}</div>` : ''}
+          ${p.operator ? `<div class="meta-item"><div class="meta-dot"></div>${p.operator}</div>` : ''}
+          ${p.commodity ? `<div class="meta-item"><div class="meta-dot"></div>${p.commodity}</div>` : ''}
+          <div class="meta-item"><div class="meta-dot"></div>Started ${p.created}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center">
+        <div class="overall-badge badge-${p.status}">${statusLabel(p.status)}</div>
+        <button onclick="editProject(${p.id})" style="background:var(--bg);border:1px solid var(--border2);padding:5px 12px;border-radius:6px;font-size:0.8rem;cursor:pointer;color:var(--text2)">Edit</button>
+        <button onclick="deleteProject(${p.id})" style="background:var(--rejected-bg);border:1px solid var(--rejected);padding:5px 12px;border-radius:6px;font-size:0.8rem;cursor:pointer;color:var(--rejected)">Delete</button>
+      </div>
+    </div>
+
+    <div class="progress-summary">
+      <div class="progress-bar-wrap">
         <div class="progress-label">
           <span>APPROVAL PROGRESS</span>
           <span>${prog}%</span>
@@ -707,38 +758,67 @@ function render() {
           <div class="progress-fill" style="width:${prog}%"></div>
         </div>
       </div>
-      <div class="stages">${stagesHtml}</div>
-      <div class="card-footer">
-        <div class="card-meta">${p.operator} · ${p.created}</div>
-        <div class="card-actions">
-          <button class="btn-icon" onclick="event.stopPropagation();editProject(${p.id})" title="Edit">✎</button>
-          <button class="btn-icon" onclick="event.stopPropagation();deleteProject(${p.id})" title="Delete" style="color:var(--rejected)">✕</button>
+      <div class="progress-stats">
+        <div class="pstat">
+          <div class="pstat-num" style="color:var(--approved)">${approved}</div>
+          <div class="pstat-label">CLEARED</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-num" style="color:var(--pending)">${p.stages.filter(s=>s.status==='pending').length}</div>
+          <div class="pstat-label">PENDING</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-num">${total - approved - p.stages.filter(s=>s.status==='pending').length - p.stages.filter(s=>s.status==='rejected').length}</div>
+          <div class="pstat-label">REMAINING</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-num">${total}</div>
+          <div class="pstat-label">TOTAL</div>
         </div>
       </div>
-    </div>`;
-  }).join('');
+    </div>
+
+    <div class="pathway">${stagesHtml}</div>
+  `;
 }
 
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
+function toggleStageEdit(i) {
+  openStage = openStage === i ? null : i;
+  renderProject();
+}
+
+function closeStageEdit(e) {
+  e.stopPropagation();
+  openStage = null;
+  renderProject();
+}
+
+function updateStage(i) {
+  const p = projects.find(x => x.id === currentProjectId);
+  p.stages[i].status = document.getElementById(`stageStatus${i}`).value;
+  save();
+  renderProject();
+}
+
+function updateStageDate(i) {
+  const p = projects.find(x => x.id === currentProjectId);
+  p.stages[i].date = document.getElementById(`stageDate${i}`).value;
+  save();
 }
 
 function openModal(project) {
   editingId = project ? project.id : null;
-  document.getElementById('modalTitle').textContent = project ? 'EDIT PROJECT' : 'NEW PROJECT';
+  document.getElementById('modalTitle').textContent = project ? 'Edit Project' : 'Add New Project';
   document.getElementById('fName').value = project?.name || '';
   document.getElementById('fRegion').value = project?.region || '';
   document.getElementById('fOperator').value = project?.operator || '';
   document.getElementById('fCommodity').value = project?.commodity || '';
   document.getElementById('fStatus').value = project?.status || 'not-started';
 
-  const editor = document.getElementById('stagesEditor');
-  editor.innerHTML = '';
-  const stages = project?.stages || DEFAULT_STAGES.map(n => ({ name: n, status: 'not-started', date: '' }));
-  stages.forEach((s, i) => addStageField(s));
+  const list = document.getElementById('stagesList');
+  list.innerHTML = '';
+  const stages = project?.stages || DEFAULT_STAGES.map(s => ({ ...s, status: 'not-started', date: '' }));
+  stages.forEach(s => addStageRow(s));
 
   document.getElementById('modalOverlay').classList.add('open');
 }
@@ -748,32 +828,32 @@ function closeModal() {
   editingId = null;
 }
 
-function addStageField(stage) {
-  const editor = document.getElementById('stagesEditor');
-  const row = document.createElement('div');
-  row.className = 'stage-edit-row';
-  row.innerHTML = `
-    <input class="form-input stage-name-input" placeholder="Stage name" value="${stage?.name || ''}" style="font-size:0.78rem">
-    <select class="form-select stage-status-input" style="font-size:0.72rem;padding:8px 6px">
+function addStageRow(stage) {
+  const list = document.getElementById('stagesList');
+  const div = document.createElement('div');
+  div.className = 'stage-item';
+  div.innerHTML = `
+    <input style="flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;font-family:inherit" 
+      placeholder="Stage name" value="${stage?.name || ''}">
+    <select class="edit-select" style="width:120px">
       <option value="not-started" ${stage?.status==='not-started'?'selected':''}>Not Started</option>
-      <option value="pending" ${stage?.status==='pending'?'selected':''}>Pending</option>
+      <option value="pending" ${stage?.status==='pending'?'selected':''}>In Progress</option>
       <option value="approved" ${stage?.status==='approved'?'selected':''}>Approved</option>
       <option value="rejected" ${stage?.status==='rejected'?'selected':''}>Rejected</option>
     </select>
-    <button class="btn-icon" onclick="this.parentElement.remove()" style="flex-shrink:0;color:var(--rejected)">✕</button>
+    <button onclick="this.parentElement.remove()" style="background:var(--rejected-bg);border:none;color:var(--rejected);width:26px;height:26px;border-radius:4px;cursor:pointer;font-size:0.9rem">✕</button>
   `;
-  editor.appendChild(row);
+  list.appendChild(div);
 }
 
 function saveProject() {
   const name = document.getElementById('fName').value.trim();
-  if (!name) { alert('Project name required'); return; }
+  if (!name) { alert('Project name is required'); return; }
 
-  const stages = [...document.querySelectorAll('.stage-edit-row')].map(row => ({
-    name: row.querySelector('.stage-name-input').value.trim(),
-    status: row.querySelector('.stage-status-input').value,
-    date: ''
-  })).filter(s => s.name);
+  const stages = [...document.querySelectorAll('#stagesList .stage-item')].map(row => {
+    const inputs = row.querySelectorAll('input, select');
+    return { name: inputs[0].value.trim(), status: inputs[1].value, date: '', desc: '' };
+  }).filter(s => s.name);
 
   const data = {
     name,
@@ -788,26 +868,38 @@ function saveProject() {
     const idx = projects.findIndex(p => p.id === editingId);
     projects[idx] = { ...projects[idx], ...data };
   } else {
-    projects.push({ id: Date.now(), created: new Date().toISOString().split('T')[0], ...data });
+    const newId = Date.now();
+    projects.push({ id: newId, created: new Date().toISOString().split('T')[0], ...data });
+    currentProjectId = newId;
   }
 
   save();
   closeModal();
+  renderSelector();
+  renderProject();
 }
 
 function editProject(id) {
-  const p = projects.find(p => p.id === id);
+  const p = projects.find(x => x.id === id);
   if (p) openModal(p);
 }
 
 function deleteProject(id) {
-  if (confirm('Delete this project?')) {
-    projects = projects.filter(p => p.id !== id);
-    save();
-  }
+  if (!confirm('Delete this project? This cannot be undone.')) return;
+  projects = projects.filter(p => p.id !== id);
+  currentProjectId = projects.length ? projects[0].id : null;
+  save();
+  renderSelector();
+  renderProject();
 }
 
-render();
+// Init
+renderSelector();
+if (projects.length > 0) {
+  currentProjectId = projects[0].id;
+  document.getElementById('projectSelector').value = currentProjectId;
+  renderProject();
+}
 </script>
 </body>
 </html>
