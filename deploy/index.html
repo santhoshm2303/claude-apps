@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Deploy</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, sans-serif; background: #0f0f0f; color: #e0e0e0; padding: 20px; max-width: 600px; margin: 0 auto; }
+  h1 { font-size: 1.3rem; margin-bottom: 4px; color: #fff; }
+  p { font-size: 0.8rem; color: #888; margin-bottom: 24px; }
+  label { display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+  input, textarea, select { width: 100%; background: #1a1a1a; border: 1px solid #333; color: #e0e0e0; padding: 10px 12px; font-size: 0.9rem; border-radius: 4px; outline: none; margin-bottom: 16px; font-family: inherit; }
+  input:focus, textarea:focus { border-color: #555; }
+  textarea { height: 200px; resize: vertical; font-family: monospace; font-size: 0.78rem; }
+  button { background: #2563eb; color: white; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; margin-top: 4px; }
+  button:disabled { background: #1a3a7a; color: #666; }
+  #status { margin-top: 16px; padding: 14px; border-radius: 6px; display: none; font-size: 0.85rem; line-height: 1.5; }
+  .success { background: #0d2e1a; color: #4ade80; border: 1px solid #166534; }
+  .error { background: #2d0f0f; color: #f87171; border: 1px solid #7f1d1d; }
+  a { color: #60a5fa; }
+</style>
+</head>
+<body>
+  <h1>🚀 Claude Deploy</h1>
+  <p>Push files to GitHub → Vercel auto-deploys</p>
+
+  <label>File Path</label>
+  <input id="filepath" placeholder="e.g. mine-approval-tracker/index.html" value="mine-approval-tracker/index.html">
+
+  <label>Commit Message</label>
+  <input id="message" placeholder="e.g. Deploy: Mine Tracker" value="Deploy from Claude">
+
+  <label>HTML Content (paste from Claude)</label>
+  <textarea id="content" placeholder="Paste the full HTML here..."></textarea>
+
+  <button id="btn" onclick="deploy()">Deploy to GitHub → Vercel</button>
+  <div id="status"></div>
+
+<script>
+async function deploy() {
+  const filepath = document.getElementById('filepath').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const content = document.getElementById('content').value.trim();
+  const status = document.getElementById('status');
+  const btn = document.getElementById('btn');
+
+  if (!filepath || !content) {
+    status.className = 'error';
+    status.style.display = 'block';
+    status.textContent = '❌ Please fill in filepath and HTML content.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Deploying...';
+  status.style.display = 'none';
+
+  try {
+    const res = await fetch('https://santhoshm23.app.n8n.cloud/webhook/claude-deploy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filepath, message, content })
+    });
+
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      status.className = 'success';
+      status.innerHTML = `✅ Deployed successfully!<br><a href="${data.url}" target="_blank">${data.url}</a><br><small style="color:#aaa">Commit: ${data.commit?.substring(0,7)}</small>`;
+    } else {
+      throw new Error(JSON.stringify(data));
+    }
+  } catch (err) {
+    status.className = 'error';
+    status.textContent = '❌ Error: ' + err.message;
+  } finally {
+    status.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Deploy to GitHub → Vercel';
+  }
+}
+</script>
+</body>
+</html>
