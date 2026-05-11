@@ -1,415 +1,813 @@
-<!DOCTYPE html>
+=<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WA Open Pit Mine — Approval Pathway Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eeecea;--text:#1a1a18;--text2:#5f5e5a;--text3:#9b9990;--border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);--radius:8px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;--text:#f0ede8;--text2:#a8a69f;--text3:#6b6963;--border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18)}}
-body{font-family:var(--font);background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh}
-.app{max-width:1200px;margin:0 auto;padding:24px 16px 48px}
-header{margin-bottom:20px}
-header h1{font-size:20px;font-weight:600}
-header p{font-size:13px;color:var(--text2);margin-top:4px}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border2);margin-bottom:20px}
-.tab{padding:8px 16px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--text);border-bottom-color:#1D9E75}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-/* Stats */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
-.stat{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 14px}
-.stat-val{font-size:22px;font-weight:600}
-.stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
-/* Toolbar */
-.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-.btn{font-size:12px;padding:5px 11px;border:0.5px solid var(--border2);border-radius:6px;background:var(--bg);color:var(--text2);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-.btn:hover{background:var(--bg2);color:var(--text)}
-.btn.active{background:var(--bg2);color:var(--text);outline:1.5px solid #1D9E75;outline-offset:1px}
-.sep{width:1px;height:20px;background:var(--border)}
-.hint{font-size:11px;color:var(--text3);margin-left:auto}
-/* Hierarchy */
-.stage{margin-bottom:4px}
-.stage-node{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;cursor:pointer;user-select:none;border:0.5px solid transparent}
-.stage-node:hover{filter:brightness(0.97)}
-.stage-chevron{font-size:13px;transition:transform .2s;flex-shrink:0}
-.stage-chevron.open{transform:rotate(90deg)}
-.stage-label{font-size:13px;font-weight:500;flex:1}
-.stage-badge{font-size:10px;padding:2px 7px;border-radius:10px;flex-shrink:0;font-weight:500}
-.children{display:none;position:relative;margin-top:2px}
-.children.open{display:block}
-.item-wrap{position:relative;padding-left:44px;margin-bottom:2px}
-.item-row{display:flex;align-items:flex-start;border-radius:6px;overflow:hidden;border:0.5px solid var(--border);background:var(--bg)}
-.item-check-col{padding:10px;cursor:pointer;flex-shrink:0;display:flex;align-items:center}
-.item-check-col:hover{background:var(--bg2)}
-.chk{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.chk.done{background:#1D9E75;border-color:#1D9E75}
-.chk.done::after{content:'';display:block;width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(0,-1px)}
-.item-body{flex:1;padding:8px 8px 8px 0;cursor:pointer;min-width:0}
-.item-body:hover{background:var(--bg2)}
-.item-title{font-size:12px;font-weight:500;color:var(--text);line-height:1.3}
-.item-title.done{text-decoration:line-through;color:var(--text2)}
-.item-sub{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4}
-.item-right{display:flex;align-items:center;gap:4px;padding:8px 8px 8px 0;flex-shrink:0}
-.agency-pill{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:500;white-space:nowrap}
-.note-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;line-height:1;padding:2px 4px}
-.note-btn:hover{color:var(--text2)}
-.note-btn.has-note{color:#1D9E75}
-.note-panel{display:none;padding:6px 12px 8px;background:var(--bg2);border-top:0.5px solid var(--border)}
-.note-panel.open{display:block}
-.note-panel textarea,.stage-note textarea{width:100%;font-size:11px;font-family:var(--font);color:var(--text);background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:5px 7px;resize:vertical;min-height:44px;line-height:1.5}
-.note-panel textarea:focus,.stage-note textarea:focus{outline:none;border-color:var(--border2)}
-.note-panel textarea::placeholder,.stage-note textarea::placeholder{color:var(--text3)}
-.stage-note{padding:6px 12px 8px 36px;display:none;border-top:0.5px solid var(--border)}
-.stage-note.open{display:block}
-/* Progress */
-.prog-bar{flex:1;min-width:100px;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;background:#1D9E75;border-radius:3px;transition:width .3s}
-.prog-lbl{font-size:11px;color:var(--text2);white-space:nowrap}
-/* Gantt */
-.gantt-outer{overflow-x:auto;border:0.5px solid var(--border2);border-radius:10px;position:relative;background:var(--bg)}
-table{border-collapse:collapse;width:100%;min-width:700px}
-thead tr{border-bottom:1px solid var(--border2)}
-.th-lbl{width:220px;min-width:220px;padding:6px 10px;font-size:10px;font-weight:600;color:var(--text2);text-align:left;background:var(--bg2);position:sticky;left:0;z-index:3}
-.th-mo{padding:5px 2px;font-size:10px;font-weight:500;color:var(--text2);text-align:center;background:var(--bg2);border-left:0.5px solid var(--border)}
-.lbl-cell{padding:4px 8px 4px 12px;font-size:11px;color:var(--text);position:sticky;left:0;z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;background:var(--bg);cursor:pointer;border-bottom:0.5px solid var(--border)}
-.lbl-cell:hover{background:var(--bg2)}
-.lbl-cell.stage-lbl{font-weight:500;background:var(--bg2)}
-.bar-td{padding:2px 0;position:relative;border-left:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
-.stage-bar-td{background:var(--bg2);border-bottom:0.5px solid var(--border2)}
-.bar{position:absolute;top:3px;height:16px;border-radius:3px;cursor:ew-resize;display:flex;align-items:center;padding:0 5px;font-size:9px;font-weight:500;overflow:hidden;white-space:nowrap;user-select:none}
-.bar:hover{filter:brightness(0.88)}
-.bar.critical{outline:2px solid #E24B4A;outline-offset:1px}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:11px;color:var(--text2);align-items:center}
-.leg-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.tooltip{position:fixed;background:var(--bg);border:0.5px solid var(--border2);border-radius:8px;padding:8px 11px;font-size:11px;color:var(--text);pointer-events:none;z-index:999;display:none;line-height:1.7;max-width:240px}
+:root {
+  --ore: #C8873A;
+  --ore-light: #E8A55A;
+  --earth: #2A1F14;
+  --earth-mid: #3D2E1E;
+  --earth-light: #5A4535;
+  --dust: #B8A898;
+  --dust-light: #D4C8B8;
+  --sky: #7BA8C4;
+  --approved: #4CAF7D;
+  --pending: #E8B84B;
+  --not-started: #6B7280;
+  --rejected: #E05A5A;
+  --bg: #1A1208;
+  --surface: #221A0E;
+  --surface2: #2E2210;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--dust-light);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+header {
+  background: var(--earth);
+  border-bottom: 2px solid var(--ore);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
+  color: var(--ore);
+  line-height: 1;
+}
+
+.logo span {
+  color: var(--dust);
+  font-size: 0.75rem;
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.2em;
+  margin-top: 2px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dust);
+  background: var(--earth-mid);
+  padding: 4px 10px;
+  border: 1px solid var(--earth-light);
+  letter-spacing: 0.1em;
+}
+
+.btn-add {
+  background: var(--ore);
+  color: var(--earth);
+  border: none;
+  padding: 8px 18px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-add:hover { background: var(--ore-light); }
+
+main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+
+/* Stats bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--earth-light);
+  border: 1px solid var(--earth-light);
+  margin-bottom: 2rem;
+  animation: fadeUp 0.5s ease both;
+}
+
+.stat {
+  background: var(--surface);
+  padding: 1.2rem 1.5rem;
+  text-align: center;
+}
+
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--ore);
+}
+
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--dust);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+/* Filter row */
+.filter-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+
+.filter-btn {
+  background: var(--surface);
+  border: 1px solid var(--earth-light);
+  color: var(--dust);
+  padding: 6px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--ore);
+  color: var(--earth);
+  border-color: var(--ore);
+}
+
+/* Project grid */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.5rem;
+  animation: fadeUp 0.5s 0.2s ease both;
+}
+
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--earth-light);
+  border-top: 3px solid var(--ore);
+  transition: transform 0.2s, border-color 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, transparent 50%, rgba(200,135,58,0.05) 50%);
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ore);
+}
+
+.card-header {
+  padding: 1.2rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--earth-mid);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.project-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  color: var(--dust-light);
+  line-height: 1.2;
+}
+
+.project-region {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--dust);
+  margin-top: 3px;
+  letter-spacing: 0.1em;
+}
+
+.status-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.status-approved { background: rgba(76,175,125,0.15); color: var(--approved); border: 1px solid rgba(76,175,125,0.3); }
+.status-pending { background: rgba(232,184,75,0.15); color: var(--pending); border: 1px solid rgba(232,184,75,0.3); }
+.status-not-started { background: rgba(107,114,128,0.15); color: var(--not-started); border: 1px solid rgba(107,114,128,0.3); }
+.status-rejected { background: rgba(224,90,90,0.15); color: var(--rejected); border: 1px solid rgba(224,90,90,0.3); }
+
+/* Progress bar */
+.card-progress { padding: 1rem 1.5rem; }
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--dust);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.progress-track {
+  height: 4px;
+  background: var(--earth-mid);
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ore), var(--ore-light));
+  transition: width 0.6s ease;
+}
+
+/* Approval stages */
+.stages { padding: 0 1.5rem 1.5rem; }
+
+.stage-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.stage-row:last-child { border-bottom: none; }
+
+.stage-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-approved { background: var(--approved); }
+.dot-pending { background: var(--pending); box-shadow: 0 0 6px rgba(232,184,75,0.5); }
+.dot-not-started { background: var(--earth-light); }
+.dot-rejected { background: var(--rejected); }
+
+.stage-name {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--dust);
+  flex: 1;
+}
+
+.stage-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--earth-light);
+  letter-spacing: 0.05em;
+}
+
+/* Card footer */
+.card-footer {
+  padding: 0.75rem 1.5rem;
+  background: var(--earth);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--earth-light);
+  letter-spacing: 0.08em;
+}
+
+.card-actions { display: flex; gap: 0.5rem; }
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--earth-light);
+  color: var(--dust);
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+.btn-icon:hover { border-color: var(--ore); color: var(--ore); }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--earth-light);
+  grid-column: 1 / -1;
+}
+.empty-state svg { opacity: 0.3; margin-bottom: 1rem; }
+.empty-state p { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--ore);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  background: var(--earth);
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--ore);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  color: var(--ore);
+}
+
+.modal-close {
+  background: transparent;
+  border: 1px solid var(--earth-light);
+  color: var(--dust);
+  width: 30px; height: 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+.modal-close:hover { border-color: var(--ore); color: var(--ore); }
+
+.modal-body { padding: 1.5rem; }
+
+.form-group { margin-bottom: 1.2rem; }
+
+.form-label {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--dust);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  background: var(--earth);
+  border: 1px solid var(--earth-light);
+  color: var(--dust-light);
+  padding: 8px 12px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus { border-color: var(--ore); }
+.form-select option { background: var(--earth); }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.stages-editor { margin-top: 0.5rem; }
+
+.stage-edit-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--earth-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid var(--earth-light);
+  color: var(--dust);
+  padding: 8px 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-cancel:hover { border-color: var(--dust); }
+
+.btn-save {
+  background: var(--ore);
+  border: none;
+  color: var(--earth);
+  padding: 8px 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-save:hover { background: var(--ore-light); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .projects-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  header { padding: 0 1rem; }
+  main { padding: 1rem; }
+}
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <h1>WA Open Pit Mine — Approval Pathway Tracker</h1>
-    <p>Interactive approval checklist, hierarchy view and Gantt chart with dependency logic</p>
-  </header>
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('hierarchy',this)">&#9776; Hierarchy</button>
-    <button class="tab" onclick="switchTab('gantt',this)">&#9776; Gantt Chart</button>
-    <button class="tab" onclick="switchTab('checklist',this)">&#9776; Checklist</button>
+
+<header>
+  <div class="logo">
+    Mine Tracker
+    <span>WA OPEN PIT APPROVAL PATHWAY</span>
+  </div>
+  <div class="header-right">
+    <div class="header-badge" id="lastUpdated">UPDATED —</div>
+    <button class="btn-add" onclick="openModal()">+ ADD PROJECT</button>
+  </div>
+</header>
+
+<main>
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">Total Projects</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="statApproved" style="color:var(--approved)">0</div>
+      <div class="stat-label">Fully Approved</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="statInProgress" style="color:var(--pending)">0</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="statStages">0</div>
+      <div class="stat-label">Stages Cleared</div>
+    </div>
   </div>
 
-  <!-- HIERARCHY TAB -->
-  <div id="tab-hierarchy" class="tab-panel active">
-    <div class="toolbar">
-      <button class="btn" onclick="expandAll()">&#8964; Expand all</button>
-      <button class="btn" onclick="collapseAll()">&#8963; Collapse all</button>
-      <div class="sep"></div>
-      <div class="prog-bar"><div class="prog-fill" id="pf-h"></div></div>
-      <span class="prog-lbl" id="pl-h">0 / 0</span>
-      <div class="sep"></div>
-      <button class="btn" onclick="exportNotes()">&#8659; Export notes</button>
-    </div>
-    <div id="tree"></div>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all', this)">ALL</button>
+    <button class="filter-btn" onclick="setFilter('pending', this)">IN PROGRESS</button>
+    <button class="filter-btn" onclick="setFilter('approved', this)">APPROVED</button>
+    <button class="filter-btn" onclick="setFilter('not-started', this)">NOT STARTED</button>
+    <button class="filter-btn" onclick="setFilter('rejected', this)">REJECTED</button>
   </div>
 
-  <!-- GANTT TAB -->
-  <div id="tab-gantt" class="tab-panel">
-    <div class="stats" id="gantt-stats"></div>
-    <div class="toolbar">
-      <button class="btn" id="btn-cp" onclick="toggleCP()">&#9654; Critical path</button>
-      <button class="btn" id="btn-dep" onclick="toggleDep()">&#9655; Dep. arrows</button>
-      <div class="sep"></div>
-      <button class="btn" onclick="resetGantt()">&#8635; Reset</button>
-      <button class="btn" onclick="exportCSV()">&#8659; Export CSV</button>
-      <span class="hint">Drag bars to adjust &bull; cascades downstream</span>
-    </div>
-    <div class="gantt-outer" id="gantt-outer"><div id="gantt"></div></div>
-    <div class="legend" id="gantt-legend"></div>
-  </div>
+  <div class="projects-grid" id="projectsGrid"></div>
+</main>
 
-  <!-- CHECKLIST TAB -->
-  <div id="tab-checklist" class="tab-panel">
-    <div class="toolbar">
-      <button class="btn" onclick="expandAll()">&#8964; Expand all</button>
-      <button class="btn" onclick="collapseAll()">&#8963; Collapse all</button>
-      <div class="sep"></div>
-      <div class="prog-bar"><div class="prog-fill" id="pf-c"></div></div>
-      <span class="prog-lbl" id="pl-c">0 / 0</span>
-      <div class="sep"></div>
-      <button class="btn" onclick="exportNotes()">&#8659; Export</button>
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">NEW PROJECT</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div id="checklist"></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Project Name</label>
+          <input class="form-input" id="fName" placeholder="e.g. Pilbara Iron Extension">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Region</label>
+          <input class="form-input" id="fRegion" placeholder="e.g. Pilbara, WA">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Operator</label>
+          <input class="form-input" id="fOperator" placeholder="Company name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Commodity</label>
+          <input class="form-input" id="fCommodity" placeholder="e.g. Iron Ore, Gold">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Overall Status</label>
+        <select class="form-select" id="fStatus">
+          <option value="not-started">Not Started</option>
+          <option value="pending">In Progress</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Approval Stages</label>
+        <div class="stages-editor" id="stagesEditor"></div>
+        <button class="btn-cancel" style="margin-top:0.5rem;font-size:0.65rem" onclick="addStageField()">+ ADD STAGE</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
+      <button class="btn-save" onclick="saveProject()">SAVE PROJECT</button>
+    </div>
   </div>
 </div>
-<div class="tooltip" id="tt"></div>
 
 <script>
-const STAGES=[
-  {id:'s1',label:'1. Tenement conversion',color:'#1D9E75',bg:'#E1F5EE',tx:'#085041',bdg:'#9FE1CB',
-   items:[
-    {id:'a1',title:'Mining Lease application (s.74)',sub:'Convert EL/ELA → ML · Mining Act 1978',ag:'DEMIRS',agBg:'#9FE1CB',agTx:'#085041',dur:6,deps:[]},
-    {id:'a2',title:'Mining Proposal (MP)',sub:'Required before ML grant · submitted to DEMIRS',ag:'DEMIRS',agBg:'#9FE1CB',agTx:'#085041',dur:5,deps:['a1']},
-  ]},
-  {id:'s2',label:'2. Environmental approvals',color:'#7F77DD',bg:'#EEEDFE',tx:'#3C3489',bdg:'#CECBF6',
-   items:[
-    {id:'b1',title:'Part IV EPA referral',sub:'EIA referral · EP Act 1986 · level of assessment set',ag:'EPA/DWER',agBg:'#CECBF6',agTx:'#3C3489',dur:2,deps:['a1']},
-    {id:'b2',title:'Level of assessment determined',sub:'PI / PER / API / Scoping document',ag:'EPA',agBg:'#CECBF6',agTx:'#3C3489',dur:3,deps:['b1']},
-    {id:'b3',title:'EIA / public review',sub:'PER public comment + EPA assessment',ag:'EPA',agBg:'#CECBF6',agTx:'#3C3489',dur:12,deps:['b2']},
-    {id:'b4',title:'Ministerial Statement issued',sub:'Binding environmental conditions on proponent',ag:'Min. Env.',agBg:'#CECBF6',agTx:'#3C3489',dur:3,deps:['b3']},
-    {id:'b5',title:'s.5C EP Act conditions compliance',sub:'Conditions compliance program established',ag:'DWER',agBg:'#CECBF6',agTx:'#3C3489',dur:2,deps:['b4']},
-  ]},
-  {id:'s3',label:'3. Native title & heritage',color:'#378ADD',bg:'#E6F1FB',tx:'#0C447C',bdg:'#B5D4F4',
-   items:[
-    {id:'c1',title:'Right to Negotiate (RTN)',sub:'6-month statutory negotiation · NTA 1993',ag:'NNTT',agBg:'#B5D4F4',agTx:'#0C447C',dur:6,deps:['a1']},
-    {id:'c2',title:'ILUA / CLA executed',sub:'Negotiated agreement with native title holders',ag:'NTRBs',agBg:'#B5D4F4',agTx:'#0C447C',dur:10,deps:['c1']},
-    {id:'c3',title:'Aboriginal Heritage Survey',sub:'Desktop + field survey · ethnographic/archaeological',ag:'DPLH/AAHC',agBg:'#B5D4F4',agTx:'#0C447C',dur:8,deps:['a1']},
-    {id:'c4',title:'s.18 AH Minister consent',sub:'Ministerial consent · use of AH sites',ag:'DPLH',agBg:'#B5D4F4',agTx:'#0C447C',dur:6,deps:['c3']},
-  ]},
-  {id:'s4',label:'4. Mining Act approvals',color:'#BA7517',bg:'#FAEEDA',tx:'#633806',bdg:'#FAC775',
-   items:[
-    {id:'d1',title:'MDCP prepared & submitted',sub:'Mine Disturbance & Closure Plan · financial assurance set',ag:'DEMIRS',agBg:'#FAC775',agTx:'#633806',dur:5,deps:['a1']},
-    {id:'d2',title:'Mining Lease (ML) granted',sub:'Requires MP, Min. Statement, s.18, ILUA, MDCP',ag:'Min. Mines',agBg:'#FAC775',agTx:'#633806',dur:3,deps:['a2','b4','c2','c4','d1']},
-    {id:'d3',title:'Programme of Work (PoW) approved',sub:'Submitted per disturbance area / stage',ag:'DEMIRS',agBg:'#FAC775',agTx:'#633806',dur:3,deps:['d2']},
-    {id:'d4',title:'Blast / noise / dust approvals',sub:'Blasting (Mines Safety) · EP Act noise assessment',ag:'DEMIRS',agBg:'#FAC775',agTx:'#633806',dur:3,deps:['d2']},
-  ]},
-  {id:'s5',label:'5. Water & land use',color:'#D85A30',bg:'#FAECE7',tx:'#4A1B0C',bdg:'#F5C4B3',
-   items:[
-    {id:'e1',title:'Water licence — s.5C RiWI Act',sub:'Groundwater abstraction / dewatering licence',ag:'DWER',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:14,deps:['b4']},
-    {id:'e2',title:'Bed & Banks permit — s.17 RiWI Act',sub:'Work in/near watercourses or wetlands',ag:'DWER',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:5,deps:['b4']},
-    {id:'e3',title:'Clearing permit — Part V EP Act',sub:'Vegetation clearing ≥ 0.5 ha or threatened species',ag:'DWER',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:7,deps:['b4']},
-    {id:'e4',title:'Planning approval (if applicable)',sub:'WAPC / local government · Planning Act 2005',ag:'WAPC/LGA',agBg:'#F5C4B3',agTx:'#4A1B0C',dur:6,deps:['a1']},
-  ]},
-  {id:'s6',label:'6. Access to ground',color:'#3B6D11',bg:'#EAF3DE',tx:'#173404',bdg:'#C0DD97',
-   items:[
-    {id:'f1',title:'Works Approval — Part V EP Act',sub:'Prescribed premises approval',ag:'DWER',agBg:'#C0DD97',agTx:'#173404',dur:4,deps:['b5','d2']},
-    {id:'f2',title:'Miscellaneous Licence',sub:'Mining Act · access roads, camps, infrastructure',ag:'DEMIRS',agBg:'#C0DD97',agTx:'#173404',dur:3,deps:['d2']},
-    {id:'f3',title:'Access to ground authorised',sub:'All approvals in place · PoW approved · ILUA executed',ag:'All',agBg:'#C0DD97',agTx:'#173404',dur:1,deps:['d3','d4','e1','e2','e3','f1','f2']},
-  ]},
-  {id:'s7',label:'7. Commence operations',color:'#5F5E5A',bg:'#F1EFE8',tx:'#2C2C2A',bdg:'#D3D1C7',
-   items:[
-    {id:'g1',title:'Safety Management System (SMS/HSMS)',sub:'Notified to inspector · Mines Safety & Inspection Act 1994',ag:'DEMIRS',agBg:'#D3D1C7',agTx:'#2C2C2A',dur:3,deps:['d2']},
-    {id:'g2',title:'Federal EPBC Act referral (if triggered)',sub:'Commonwealth · matters of national environmental significance',ag:'DCCEEW',agBg:'#D3D1C7',agTx:'#2C2C2A',dur:18,deps:['a1']},
-    {id:'g3',title:'Mine operations commence ✓',sub:'Ongoing reporting, monitoring & compliance obligations',ag:'Multi',agBg:'#D3D1C7',agTx:'#2C2C2A',dur:1,deps:['f3','g1']},
-  ]},
+const DEFAULT_STAGES = [
+  'Native Title Clearance',
+  'Environmental Impact Assessment',
+  'Mining Proposal (DMIRS)',
+  'Works Approval (EPA)',
+  'Water Licence (DoW)',
+  'Heritage Survey',
+  'Mine Closure Plan',
+  'State Agreement / MOU'
 ];
 
-const ALL_ITEMS=STAGES.flatMap(s=>s.items);
-const S={};
-STAGES.forEach(s=>{S[s.id]={open:true,note:'',noteOpen:false};s.items.forEach(it=>{S[it.id]={done:false,noteOpen:false,note:''};});});
-const lags={};
-let showCP=false,showDep=false;
+let projects = JSON.parse(localStorage.getItem('wa-mine-tracker') || '[]');
+let editingId = null;
+let currentFilter = 'all';
 
-function switchTab(id,el){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  el.classList.add('active');
-  if(id==='gantt') renderGantt();
-  else if(id==='checklist') renderChecklist();
-  else renderHierarchy();
-}
-
-/* ── HIERARCHY ── */
-function renderHierarchy(){
-  const tree=document.getElementById('tree');
-  tree.innerHTML='';
-  let total=0,done=0;
-  STAGES.forEach((s,si)=>{
-    total+=s.items.length;
-    const itemsDone=s.items.filter(it=>S[it.id].done).length;
-    done+=itemsDone;
-    const sOpen=S[s.id].open;
-    const div=document.createElement('div');div.className='stage';
-    const sNode=document.createElement('div');sNode.className='stage-node';
-    sNode.style.cssText=`background:${s.bg};border-color:${s.color}30`;
-    sNode.innerHTML=`<span class="stage-chevron ${sOpen?'open':''}" style="color:${s.color}">&#9654;</span>
-      <span class="stage-label" style="color:${s.tx}">${s.label}</span>
-      <span class="stage-badge" style="background:${s.bdg};color:${s.tx}">${itemsDone}/${s.items.length}</span>
-      <button class="note-btn ${S[s.id].note?'has-note':''}" title="Stage note" onclick="event.stopPropagation();toggleStageNote('${s.id}')">&#9998;</button>`;
-    sNode.addEventListener('click',()=>{S[s.id].open=!S[s.id].open;renderHierarchy();});
-    div.appendChild(sNode);
-    const sNote=document.createElement('div');sNote.className='stage-note'+(S[s.id].noteOpen?' open':'');
-    sNote.innerHTML=`<textarea placeholder="Stage notes — contacts, dates, key issues…">${S[s.id].note}</textarea>`;
-    sNote.querySelector('textarea').addEventListener('input',e=>{S[s.id].note=e.target.value;refreshProg();});
-    div.appendChild(sNote);
-    const children=document.createElement('div');children.className='children'+(sOpen?' open':'');
-    const vline=document.createElement('div');
-    vline.style.cssText=`position:absolute;left:22px;top:0;bottom:10px;width:1px;background:${s.color}40;pointer-events:none`;
-    children.appendChild(vline);
-    s.items.forEach((it,ii)=>{
-      const iState=S[it.id];
-      const wrap=document.createElement('div');wrap.style.cssText='position:relative;padding-left:44px;margin-bottom:2px';
-      const hline=document.createElement('div');hline.style.cssText=`position:absolute;left:22px;top:18px;width:22px;height:1px;background:${s.color}40;pointer-events:none`;
-      wrap.appendChild(hline);
-      const dot=document.createElement('div');dot.style.cssText=`position:absolute;left:18px;top:14px;width:9px;height:9px;border-radius:50%;background:${iState.done?s.color:'var(--bg)'};border:1.5px solid ${s.color};pointer-events:none`;
-      wrap.appendChild(dot);
-      const row=document.createElement('div');row.className='item-row';
-      const cc=document.createElement('div');cc.className='item-check-col';
-      cc.innerHTML=`<div class="chk ${iState.done?'done':''}"></div>`;
-      cc.addEventListener('click',()=>{iState.done=!iState.done;renderHierarchy();refreshChecklist();});
-      const body=document.createElement('div');body.className='item-body';
-      body.innerHTML=`<div class="item-title ${iState.done?'done':''}">${it.title}</div><div class="item-sub">${it.sub}</div>`;
-      body.addEventListener('click',()=>{iState.done=!iState.done;renderHierarchy();refreshChecklist();});
-      const right=document.createElement('div');right.className='item-right';
-      right.innerHTML=`<span class="agency-pill" style="background:${it.agBg};color:${it.agTx}">${it.ag}</span>
-        <button class="note-btn ${iState.note?'has-note':''}" title="Note" onclick="toggleNote('${it.id}')">&#9993;</button>`;
-      row.appendChild(cc);row.appendChild(body);row.appendChild(right);wrap.appendChild(row);
-      const np=document.createElement('div');np.className='note-panel'+(iState.noteOpen?' open':'');
-      np.innerHTML=`<textarea placeholder="Notes, responsible person, due date, reference…">${iState.note}</textarea>`;
-      np.querySelector('textarea').addEventListener('input',e=>{iState.note=e.target.value;right.querySelector('.note-btn').className='note-btn'+(iState.note?' has-note':'');});
-      wrap.appendChild(np);children.appendChild(wrap);
-    });
-    div.appendChild(children);tree.appendChild(div);
-  });
-  const pct=total>0?Math.round(done/total*100):0;
-  document.getElementById('pf-h').style.width=pct+'%';
-  document.getElementById('pl-h').textContent=done+' / '+total+' ('+pct+'%)';
-}
-function toggleNote(id){S[id].noteOpen=!S[id].noteOpen;renderHierarchy();}
-function toggleStageNote(id){S[id].noteOpen=!S[id].noteOpen;renderHierarchy();}
-function expandAll(){STAGES.forEach(s=>{S[s.id].open=true;});renderHierarchy();}
-function collapseAll(){STAGES.forEach(s=>{S[s.id].open=false;});renderHierarchy();}
-function refreshProg(){
-  let total=0,done=0;
-  STAGES.forEach(s=>{total+=s.items.length;s.items.forEach(it=>{if(S[it.id].done)done++;});});
-  const pct=total>0?Math.round(done/total*100):0;
-  ['h','c'].forEach(x=>{
-    const pf=document.getElementById('pf-'+x);const pl=document.getElementById('pl-'+x);
-    if(pf)pf.style.width=pct+'%';if(pl)pl.textContent=done+' / '+total+' ('+pct+'%)';
-  });
-}
-function exportNotes(){
-  let lines=['WA Open Pit Mine Approval Tracker','='.repeat(40),''];
-  STAGES.forEach((s,si)=>{
-    lines.push(s.label.toUpperCase());
-    if(S[s.id].note)lines.push('   Stage note: '+S[s.id].note);
-    s.items.forEach(it=>{const st=S[it.id];lines.push('   '+(st.done?'[x]':'[ ]')+' '+it.title+' ('+it.ag+')');if(st.note)lines.push('       Note: '+st.note);});
-    lines.push('');
-  });
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/plain'}));a.download='mine-approval-tracker.txt';a.click();
-}
-
-/* ── CHECKLIST ── */
-function renderChecklist(){
-  const container=document.getElementById('checklist');
-  if(!container)return;
-  container.innerHTML='';
-  STAGES.forEach(s=>{
-    const itemsDone=s.items.filter(it=>S[it.id].done).length;
-    const sOpen=S[s.id].open;
-    const stageDiv=document.createElement('div');stageDiv.style.cssText='margin-bottom:6px;border-radius:8px;border:0.5px solid var(--border);overflow:hidden';
-    const hdr=document.createElement('div');hdr.style.cssText=`display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;background:${s.bg};border-left:3px solid ${s.color}`;
-    hdr.innerHTML=`<span style="color:${s.tx};font-size:12px;font-weight:500;flex:1">${s.label}</span><span style="font-size:11px;color:${s.tx};background:${s.bdg};padding:2px 7px;border-radius:10px;font-weight:500">${itemsDone}/${s.items.length}</span><span style="color:${s.tx};font-size:14px">${sOpen?'&#8964;':'&#8963;'}</span>`;
-    hdr.addEventListener('click',()=>{S[s.id].open=!S[s.id].open;renderChecklist();});
-    stageDiv.appendChild(hdr);
-    if(sOpen){
-      s.items.forEach(it=>{
-        const iState=S[it.id];
-        const row=document.createElement('div');row.style.cssText='display:flex;align-items:flex-start;border-top:0.5px solid var(--border);background:var(--bg)';
-        const cc=document.createElement('div');cc.style.cssText='padding:10px;cursor:pointer;flex-shrink:0';
-        cc.innerHTML=`<div class="chk ${iState.done?'done':''}"></div>`;
-        cc.addEventListener('click',()=>{iState.done=!iState.done;renderChecklist();renderHierarchy();});
-        const body=document.createElement('div');body.style.cssText='flex:1;padding:8px 0;cursor:pointer;min-width:0';
-        body.innerHTML=`<div class="item-title ${iState.done?'done':''}" style="font-size:12px;font-weight:500">${it.title}</div><div class="item-sub" style="font-size:11px;color:var(--text2);margin-top:2px">${it.sub}</div>`;
-        body.addEventListener('click',()=>{iState.done=!iState.done;renderChecklist();renderHierarchy();});
-        const right=document.createElement('div');right.style.cssText='display:flex;align-items:center;gap:4px;padding:8px;flex-shrink:0';
-        right.innerHTML=`<span class="agency-pill" style="background:${it.agBg};color:${it.agTx};font-size:10px;padding:2px 6px;border-radius:10px;font-weight:500">${it.ag}</span>`;
-        row.appendChild(cc);row.appendChild(body);row.appendChild(right);stageDiv.appendChild(row);
-      });
+if (projects.length === 0) {
+  projects = [
+    {
+      id: 1,
+      name: 'Pilbara Iron Ore Extension',
+      region: 'Pilbara, WA',
+      operator: 'Fortescue Ltd',
+      commodity: 'Iron Ore',
+      status: 'pending',
+      created: '2025-08-01',
+      stages: [
+        { name: 'Native Title Clearance', status: 'approved', date: '2025-09-14' },
+        { name: 'Environmental Impact Assessment', status: 'approved', date: '2025-11-02' },
+        { name: 'Mining Proposal (DMIRS)', status: 'pending', date: '' },
+        { name: 'Works Approval (EPA)', status: 'not-started', date: '' },
+        { name: 'Water Licence (DoW)', status: 'not-started', date: '' },
+        { name: 'Heritage Survey', status: 'approved', date: '2025-10-08' },
+        { name: 'Mine Closure Plan', status: 'not-started', date: '' },
+      ]
+    },
+    {
+      id: 2,
+      name: 'Goldfields Deep Pit Stage 2',
+      region: 'Kalgoorlie, WA',
+      operator: 'Northern Star Resources',
+      commodity: 'Gold',
+      status: 'approved',
+      created: '2024-03-15',
+      stages: [
+        { name: 'Native Title Clearance', status: 'approved', date: '2024-04-20' },
+        { name: 'Environmental Impact Assessment', status: 'approved', date: '2024-07-11' },
+        { name: 'Mining Proposal (DMIRS)', status: 'approved', date: '2024-09-03' },
+        { name: 'Works Approval (EPA)', status: 'approved', date: '2024-10-28' },
+        { name: 'Water Licence (DoW)', status: 'approved', date: '2024-12-15' },
+        { name: 'Heritage Survey', status: 'approved', date: '2024-05-30' },
+        { name: 'Mine Closure Plan', status: 'approved', date: '2025-01-20' },
+      ]
+    },
+    {
+      id: 3,
+      name: 'Kimberley Bauxite Project',
+      region: 'Kimberley, WA',
+      operator: 'Rio Tinto WA',
+      commodity: 'Bauxite',
+      status: 'not-started',
+      created: '2026-02-10',
+      stages: [
+        { name: 'Native Title Clearance', status: 'not-started', date: '' },
+        { name: 'Environmental Impact Assessment', status: 'not-started', date: '' },
+        { name: 'Mining Proposal (DMIRS)', status: 'not-started', date: '' },
+        { name: 'Works Approval (EPA)', status: 'not-started', date: '' },
+        { name: 'Water Licence (DoW)', status: 'not-started', date: '' },
+      ]
     }
-    container.appendChild(stageDiv);
-  });
-  refreshProg();
+  ];
+  save();
 }
-function refreshChecklist(){if(document.getElementById('tab-checklist').classList.contains('active'))renderChecklist();}
 
-/* ── GANTT ── */
-function computeSchedule(){
-  const starts={};const visited=new Set();
-  function resolve(id){
-    if(visited.has(id))return starts[id];visited.add(id);
-    const t=ALL_ITEMS.find(x=>x.id===id);
-    if(!t.deps.length){starts[id]=0;return 0;}
-    const depEnd=Math.max(...t.deps.map(d=>resolve(d)+ALL_ITEMS.find(x=>x.id===d).dur));
-    starts[id]=depEnd+(lags[id]||0);return starts[id];
+function save() {
+  localStorage.setItem('wa-mine-tracker', JSON.stringify(projects));
+  render();
+}
+
+function getStatusLabel(s) {
+  return { approved: 'APPROVED', pending: 'IN PROGRESS', 'not-started': 'NOT STARTED', rejected: 'REJECTED' }[s] || s;
+}
+
+function calcProgress(stages) {
+  if (!stages.length) return 0;
+  const done = stages.filter(s => s.status === 'approved').length;
+  return Math.round((done / stages.length) * 100);
+}
+
+function render() {
+  const grid = document.getElementById('projectsGrid');
+  const filtered = currentFilter === 'all' ? projects : projects.filter(p => p.status === currentFilter);
+
+  // Stats
+  document.getElementById('statTotal').textContent = projects.length;
+  document.getElementById('statApproved').textContent = projects.filter(p => p.status === 'approved').length;
+  document.getElementById('statInProgress').textContent = projects.filter(p => p.status === 'pending').length;
+  const totalStages = projects.reduce((a, p) => a + p.stages.filter(s => s.status === 'approved').length, 0);
+  document.getElementById('statStages').textContent = totalStages;
+  document.getElementById('lastUpdated').textContent = 'UPDATED ' + new Date().toLocaleDateString('en-AU', {day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><p>NO PROJECTS FOUND</p></div>`;
+    return;
   }
-  ALL_ITEMS.forEach(t=>resolve(t.id));return starts;
-}
-function computeCriticalPath(starts){
-  const projectEnd=Math.max(...ALL_ITEMS.map(t=>starts[t.id]+t.dur));
-  const ls={};const lf={};
-  ALL_ITEMS.forEach(t=>{lf[t.id]=projectEnd;ls[t.id]=projectEnd-t.dur;});
-  [...ALL_ITEMS].reverse().forEach(t=>{ALL_ITEMS.forEach(o=>{if(o.deps.includes(t.id)){lf[t.id]=Math.min(lf[t.id],ls[o.id]);ls[t.id]=lf[t.id]-t.dur;}});});
-  const critical=new Set();ALL_ITEMS.forEach(t=>{if(Math.round(ls[t.id]-starts[t.id])<=0)critical.add(t.id);});return critical;
-}
-function toggleCP(){showCP=!showCP;document.getElementById('btn-cp').classList.toggle('active',showCP);renderGantt();}
-function toggleDep(){showDep=!showDep;document.getElementById('btn-dep').classList.toggle('active',showDep);renderGantt();}
-function resetGantt(){Object.keys(lags).forEach(k=>delete lags[k]);renderGantt();}
-function renderGantt(){
-  const starts=computeSchedule();const critical=computeCriticalPath(starts);
-  const totalMo=Math.max(...ALL_ITEMS.map(t=>starts[t.id]+t.dur))+2;
-  const COL_W=Math.max(20,Math.floor(500/totalMo));const ROW_H=24;
-  let html=`<table><thead><tr><th class="th-lbl">Approval</th>`;
-  for(let m=0;m<totalMo;m++){const yr=Math.floor(m/12)+1;const mo=m%12;const names=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];html+=`<th class="th-mo" style="width:${COL_W}px;min-width:${COL_W}px">${mo===0?'Y'+yr:(COL_W>28?names[mo]:'')}</th>`;}
-  html+=`</tr></thead><tbody>`;
-  STAGES.forEach(s=>{
-    const st2=s.items;const sStart=Math.min(...st2.map(t=>starts[t.id]));const sEnd=Math.max(...st2.map(t=>starts[t.id]+t.dur));
-    html+=`<tr style="height:${ROW_H}px"><td class="lbl-cell stage-lbl" style="border-left:3px solid ${s.color};color:${s.tx};background:${s.bg}">${s.label}</td>`;
-    for(let m=0;m<totalMo;m++){const inSpan=m>=sStart&&m<sEnd;html+=`<td class="stage-bar-td" style="height:${ROW_H}px;background:${inSpan?s.bg+'66':'var(--bg2)'}"></td>`;}
-    html+=`</tr>`;
-    st2.forEach(it=>{
-      const st=starts[it.id];const dur=it.dur;const isCrit=showCP&&critical.has(it.id);
-      html+=`<tr style="height:${ROW_H}px"><td class="lbl-cell" style="padding-left:20px;border-left:3px solid ${s.color}40" title="${it.title}">${it.title}</td>`;
-      for(let m=0;m<totalMo;m++){
-        const isFirst=m===Math.floor(st);
-        html+=`<td class="bar-td" style="height:${ROW_H}px">`;
-        if(isFirst){const pxW=dur*COL_W-3;html+=`<div class="bar${isCrit?' critical':''}" data-id="${it.id}" style="width:${pxW}px;background:${s.color};color:${s.bg};left:1px" onmouseenter="showTip(event,'${it.id}',${st},${dur},'${it.ag}')" onmouseleave="hideTip()" onmousedown="startDrag(event,'${it.id}',${COL_W},${st})">${pxW>50?it.ag:''}</div>`;}
-        html+=`</td>`;
-      }
-      html+=`</tr>`;
-    });
-  });
-  html+=`</tbody></table>`;
-  document.getElementById('gantt').innerHTML=html;
-  const projectEnd=Math.max(...ALL_ITEMS.map(t=>starts[t.id]+t.dur));
-  const critCount=[...critical].length;
-  document.getElementById('gantt-stats').innerHTML=`
-    <div class="stat"><div class="stat-val">${projectEnd}</div><div class="stat-lbl">Total months</div></div>
-    <div class="stat"><div class="stat-val">${ALL_ITEMS.length}</div><div class="stat-lbl">Approvals</div></div>
-    <div class="stat"><div class="stat-val" style="color:#E24B4A">${critCount}</div><div class="stat-lbl">Critical path</div></div>
-    <div class="stat"><div class="stat-val">${ALL_ITEMS.reduce((a,t)=>a+t.deps.length,0)}</div><div class="stat-lbl">Dependencies</div></div>`;
-  document.getElementById('gantt-legend').innerHTML=STAGES.map(s=>`<span style="display:flex;align-items:center;gap:5px"><span class="leg-swatch" style="background:${s.color}"></span><span>${s.label}</span></span>`).join('');
-  if(showDep)drawDepArrows(starts,COL_W,ROW_H);
-}
-function showTip(e,id,start,dur,ag){const tt=document.getElementById('tt');const t=ALL_ITEMS.find(x=>x.id===id);const depNames=t.deps.map(d=>ALL_ITEMS.find(x=>x.id===d)?.title).filter(Boolean);tt.innerHTML=`<b>${t.title}</b><br>Agency: ${ag}<br>Start: month ${start} &nbsp; Dur: ${dur} mo &nbsp; End: month ${start+dur}<br>${depNames.length?'<span style="color:var(--text3);font-size:10px">Deps: '+depNames.join(', ')+'</span>':'<span style="color:var(--text3);font-size:10px">No dependencies</span>'}`;tt.style.display='block';tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-10)+'px';}
-function hideTip(){document.getElementById('tt').style.display='none';}
-let drag=null;
-function startDrag(e,id,colW,origStart){e.preventDefault();drag={id,startX:e.clientX,origStart,colW};document.addEventListener('mousemove',onDrag);document.addEventListener('mouseup',endDrag);}
-function onDrag(e){if(!drag)return;const dx=e.clientX-drag.startX;const delta=Math.round(dx/drag.colW);lags[drag.id]=Math.max(-(drag.origStart),delta);renderGantt();}
-function endDrag(){drag=null;document.removeEventListener('mousemove',onDrag);document.removeEventListener('mouseup',endDrag);}
-function drawDepArrows(starts,COL_W,ROW_H){
-  document.querySelectorAll('.dep-svg').forEach(el=>el.remove());
-  const outer=document.getElementById('gantt-outer');const table=outer.querySelector('table');if(!table)return;
-  const rowTops={};let ri=1;
-  STAGES.forEach(s=>{ri++;s.items.forEach(t=>{rowTops[t.id]=ri*ROW_H+ROW_H/2;ri++;});});
-  const totalMo=Math.max(...ALL_ITEMS.map(t=>starts[t.id]+t.dur))+2;
-  const svgH=(ALL_ITEMS.length+STAGES.length+2)*ROW_H;const svgW=220+totalMo*COL_W;
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('dep-svg');svg.style.cssText='position:absolute;top:30px;left:0;pointer-events:none;z-index:5;overflow:visible';svg.setAttribute('width',svgW);svg.setAttribute('height',svgH);
-  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');defs.innerHTML=`<marker id="dh" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#88878066" stroke-width="1.2"/></marker>`;svg.appendChild(defs);
-  ALL_ITEMS.forEach(t=>{t.deps.forEach(depId=>{const dep=ALL_ITEMS.find(x=>x.id===depId);if(!dep)return;const x1=220+(starts[depId]+dep.dur)*COL_W;const y1=rowTops[depId];const x2=220+starts[t.id]*COL_W;const y2=rowTops[t.id];const mx=(x1+x2)/2;const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);path.setAttribute('fill','none');path.setAttribute('stroke','#88878066');path.setAttribute('stroke-width','1');path.setAttribute('marker-end','url(#dh)');svg.appendChild(path);});});
-  outer.style.position='relative';outer.appendChild(svg);
-}
-function exportCSV(){
-  const starts=computeSchedule();const critical=computeCriticalPath(starts);
-  const rows=[['Stage','Task','Agency','Depends on','Start (mo)','Duration (mo)','End (mo)','Critical path']];
-  STAGES.forEach(s=>{s.items.forEach(it=>{rows.push([s.label,it.title,it.ag,it.deps.join('; '),starts[it.id],it.dur,starts[it.id]+it.dur,critical.has(it.id)?'Yes':'No']);});});
-  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='mine-approval-gantt.csv';a.click();
+
+  grid.innerHTML = filtered.map(p => {
+    const prog = calcProgress(p.stages);
+    const stagesHtml = p.stages.map(s => `
+      <div class="stage-row">
+        <div class="stage-dot dot-${s.status}"></div>
+        <div class="stage-name">${s.name}</div>
+        <div class="stage-date">${s.date || '—'}</div>
+      </div>`).join('');
+
+    return `
+    <div class="project-card" onclick="editProject(${p.id})">
+      <div class="card-header">
+        <div>
+          <div class="project-name">${p.name}</div>
+          <div class="project-region">${p.region} · ${p.commodity}</div>
+        </div>
+        <div class="status-badge status-${p.status}">${getStatusLabel(p.status)}</div>
+      </div>
+      <div class="card-progress">
+        <div class="progress-label">
+          <span>APPROVAL PROGRESS</span>
+          <span>${prog}%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${prog}%"></div>
+        </div>
+      </div>
+      <div class="stages">${stagesHtml}</div>
+      <div class="card-footer">
+        <div class="card-meta">${p.operator} · ${p.created}</div>
+        <div class="card-actions">
+          <button class="btn-icon" onclick="event.stopPropagation();editProject(${p.id})" title="Edit">✎</button>
+          <button class="btn-icon" onclick="event.stopPropagation();deleteProject(${p.id})" title="Delete" style="color:var(--rejected)">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-renderHierarchy();
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function openModal(project) {
+  editingId = project ? project.id : null;
+  document.getElementById('modalTitle').textContent = project ? 'EDIT PROJECT' : 'NEW PROJECT';
+  document.getElementById('fName').value = project?.name || '';
+  document.getElementById('fRegion').value = project?.region || '';
+  document.getElementById('fOperator').value = project?.operator || '';
+  document.getElementById('fCommodity').value = project?.commodity || '';
+  document.getElementById('fStatus').value = project?.status || 'not-started';
+
+  const editor = document.getElementById('stagesEditor');
+  editor.innerHTML = '';
+  const stages = project?.stages || DEFAULT_STAGES.map(n => ({ name: n, status: 'not-started', date: '' }));
+  stages.forEach((s, i) => addStageField(s));
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function addStageField(stage) {
+  const editor = document.getElementById('stagesEditor');
+  const row = document.createElement('div');
+  row.className = 'stage-edit-row';
+  row.innerHTML = `
+    <input class="form-input stage-name-input" placeholder="Stage name" value="${stage?.name || ''}" style="font-size:0.78rem">
+    <select class="form-select stage-status-input" style="font-size:0.72rem;padding:8px 6px">
+      <option value="not-started" ${stage?.status==='not-started'?'selected':''}>Not Started</option>
+      <option value="pending" ${stage?.status==='pending'?'selected':''}>Pending</option>
+      <option value="approved" ${stage?.status==='approved'?'selected':''}>Approved</option>
+      <option value="rejected" ${stage?.status==='rejected'?'selected':''}>Rejected</option>
+    </select>
+    <button class="btn-icon" onclick="this.parentElement.remove()" style="flex-shrink:0;color:var(--rejected)">✕</button>
+  `;
+  editor.appendChild(row);
+}
+
+function saveProject() {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { alert('Project name required'); return; }
+
+  const stages = [...document.querySelectorAll('.stage-edit-row')].map(row => ({
+    name: row.querySelector('.stage-name-input').value.trim(),
+    status: row.querySelector('.stage-status-input').value,
+    date: ''
+  })).filter(s => s.name);
+
+  const data = {
+    name,
+    region: document.getElementById('fRegion').value.trim(),
+    operator: document.getElementById('fOperator').value.trim(),
+    commodity: document.getElementById('fCommodity').value.trim(),
+    status: document.getElementById('fStatus').value,
+    stages
+  };
+
+  if (editingId) {
+    const idx = projects.findIndex(p => p.id === editingId);
+    projects[idx] = { ...projects[idx], ...data };
+  } else {
+    projects.push({ id: Date.now(), created: new Date().toISOString().split('T')[0], ...data });
+  }
+
+  save();
+  closeModal();
+}
+
+function editProject(id) {
+  const p = projects.find(p => p.id === id);
+  if (p) openModal(p);
+}
+
+function deleteProject(id) {
+  if (confirm('Delete this project?')) {
+    projects = projects.filter(p => p.id !== id);
+    save();
+  }
+}
+
+render();
 </script>
 </body>
 </html>
